@@ -141,10 +141,10 @@
 					
 					text.DrawText(
 						null,
-						(t > 0 && t < 100) ? s : SpellSlots[k].ToString(),
+						(t > 0 && t < 200) ? s : SpellSlots[k].ToString(),
 						x,
 						y,
-						(hero.Spellbook.CanUseSpell(SpellSlots[k]) == SpellState.NotLearned || (t > 0 && t < 100)) ? SharpDX.Color.Gray : SharpDX.Color.LightGreen
+						(hero.Spellbook.CanUseSpell(SpellSlots[k]) == SpellState.NotLearned || (t > 0 && t < 200)) ? SharpDX.Color.Gray : SharpDX.Color.LightGreen
 					);
 					
 					if (Menu.Item("display.spell_levels").GetValue<bool>()){
