@@ -173,19 +173,19 @@
 					
 					switch (summonerspell.Name.ToLower())
 					{
-						case "summonerflash":		summoner = "Flash";		break;
-						case "summonerdot":		  summoner = "Ignite";	   break;
-						case "summonerheal":		 summoner = "Heal";		 break;
-						case "summonerteleport":	 summoner = "Teleport";	 break;
-						case "summonerexhaust":	  summoner = "Exhaust";	  break;
-						case "summonerhaste":		summoner = "Ghost";		break;
-						case "summonerbarrier":	  summoner = "Barrier";	  break;
-						case "summonerboost":		summoner = "Cleanse";	  break;
-						case "summonermana":		 summoner = "Clarity";	  break;
-						case "summonerclairvoyance": summoner = "Clairvoyance"; break;
-						case "summonerodingarrison": summoner = "Garrison";	 break;
+						case "summonerflash":			summoner = "Flash";			break;
+						case "summonerdot":				summoner = "Ignite";		break;
+						case "summonerheal":			summoner = "Heal";			break;
+						case "summonerteleport":		summoner = "Teleport";		break;
+						case "summonerexhaust":			summoner = "Exhaust";		break;
+						case "summonerhaste":			summoner = "Ghost";			break;
+						case "summonerbarrier":			summoner = "Barrier";		break;
+						case "summonerboost":			summoner = "Cleanse";		break;
+						case "summonermana":			summoner = "Clarity";		break;
+						case "summonerclairvoyance":	summoner = "Clairvoyance";	break;
+						case "summonerodingarrison":	summoner = "Garrison";		break;
 						// 
-						default:					 summoner = "Smite";   break;
+						default:						summoner = "Smite";			break;
 					}
 					
 					text.DrawText(
