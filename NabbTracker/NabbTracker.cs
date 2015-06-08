@@ -100,14 +100,13 @@
 		/// </summary>
 		public Track()
 		{
-			text = new Font(Drawing.Direct3DDevice, new System.Drawing.Font("Comic Sans", 10));
-			level = new Font(Drawing.Direct3DDevice, new System.Drawing.Font("Comic Sans", 14));
 	
 			(Menu = new Menu("NabbTracker", "NabbTracker", true)).AddToMainMenu();
 			{
 				Menu.AddItem(new MenuItem("display.allies", "Track Allies").SetValue(true));
 				Menu.AddItem(new MenuItem("display.enemies", "Track Enemies").SetValue(true));
 				Menu.AddItem(new MenuItem("display.spell_levels", "Track Spell levels").SetValue(true));
+				Menu.AddItem(new MenuItem("display.font", "Font to display").SetValue(new StringList(new []{"Arial", "Tahoma", "Verdana", "Comic Sans"})));
 			}
 			Menu.AddItem(new MenuItem("enable", "Enable").SetValue(true));
 		
@@ -121,12 +120,24 @@
 		/// </summary>
 		private void Drawing_OnDraw(EventArgs args)
 		{
+			switch(Menu.Item("display.font").GetValue<StringList>().SelectedIndex)
+			{
+				case 0:  text = new Font(Drawing.Direct3DDevice, new System.Drawing.Font("Arial", 10));      break;
+				case 1:  text = new Font(Drawing.Direct3DDevice, new System.Drawing.Font("Tahoma", 10));     break;
+				case 2:  text = new Font(Drawing.Direct3DDevice, new System.Drawing.Font("Verdana", 10));    break;
+				default: text = new Font(Drawing.Direct3DDevice, new System.Drawing.Font("Comic Sans", 10)); break;
+			}
+
+			level = new Font(Drawing.Direct3DDevice, new System.Drawing.Font("Comic Sans", 14));
+			
 			if (!Menu.Item("enable").GetValue<bool>()) return;
 	
 			foreach (var hero in HeroManager.AllHeroes.Where(hero => (hero.IsValid)
 				&& (!hero.IsMe)
 				&& (hero.IsHPBarRendered)
-				&& ((hero.IsEnemy && Menu.Item("display.enemies").GetValue<bool>()) || (hero.IsAlly && Menu.Item("display.allies").GetValue<bool>()))
+				&& ((hero.IsEnemy && Menu.Item("display.enemies").GetValue<bool>()) 
+					|| (hero.IsAlly && Menu.Item("display.allies").GetValue<bool>())
+				)
 				&& (hero != null))){
 				
 				for (int k = 0; k < SpellSlots.Count(); k++){
