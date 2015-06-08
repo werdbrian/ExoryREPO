@@ -123,7 +123,8 @@
         {
             if (!Menu.Item("enable").GetValue<bool>()) return;
 	
-			foreach (var hero in HeroManager.AllHeroes.Where(hero => (hero.IsValid) 
+			foreach (var hero in HeroManager.AllHeroes.Where(hero => (hero.IsValid)
+				&& (!hero.IsMe)
 				&& (hero.IsHPBarRendered)
 				&& ((hero.IsEnemy && Menu.Item("display.enemies").GetValue<bool>()) || (hero.IsAlly && Menu.Item("display.allies").GetValue<bool>()))
 				&& (hero != null))){
@@ -184,7 +185,7 @@
                         case "summonerclairvoyance": summoner = "Clairvoyance"; break;
                         case "summonerodingarrison": summoner = "Garrison";     break;
 						// 
-                        default: 					 summoner = "Smite";   break;
+                        default:                     summoner = "Smite";   break;
                     }
 					
 					text.DrawText(
