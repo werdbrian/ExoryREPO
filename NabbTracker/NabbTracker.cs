@@ -100,7 +100,7 @@
 		/// </summary>
         public Track()
         {
-			text = new Font(Drawing.Direct3DDevice, new System.Drawing.Font("Comic Sans", 12));
+			text = new Font(Drawing.Direct3DDevice, new System.Drawing.Font("Comic Sans", 10));
 			level = new Font(Drawing.Direct3DDevice, new System.Drawing.Font("Comic Sans", 14));
 	
 			(Menu = new Menu("NabbTracker", "NabbTracker", true)).AddToMainMenu();
@@ -131,15 +131,14 @@
 				&& (hero != null))){
 				
                 for (int k = 0; k < SpellSlots.Count(); k++){
-					
                     x = (int)hero.HPBarPosition.X + 10 + (k * 22);
                     y = (int)hero.HPBarPosition.Y + 32;
 					
+					levely = y + 5;
+	
                     var spell = hero.Spellbook.GetSpell(SpellSlots[k]);
                     var t = spell.CooldownExpires - Game.Time;
                     var s = string.Format("{0:0}", t);
-					
-					levely = y + 5;
 					
                     text.DrawText(
 						null,
@@ -149,10 +148,8 @@
 						(hero.Spellbook.CanUseSpell(SpellSlots[k]) == SpellState.NotLearned || (t > 0 && t < 100)) ? SharpDX.Color.Gray : SharpDX.Color.LightGreen
                     );
 					
-					if (Menu.Item("display.spell_levels").GetValue<bool>())
-                    {
-                        for (int i = 0; i <= spell.Level - 1; i++)
-                        {
+					if (Menu.Item("display.spell_levels").GetValue<bool>()){
+                        for (int i = 0; i <= spell.Level - 1; i++){
 							levelx = x + (i * 3);
 							
                             level.DrawText(
@@ -167,10 +164,9 @@
                 }
 				
 				for (int m = 0; m < SummonerSpellSlots.Count(); m++){
-				
-					// sum coords and format
-					sumx = (int)hero.HPBarPosition.X + 10 + (m * 75);
+					sumx = (int)hero.HPBarPosition.X + 10 + (m * 77);
 					sumy = (int)hero.HPBarPosition.Y - 2;
+					
 					var summonerspell = hero.Spellbook.GetSpell(SummonerSpellSlots[m]);
 					var t2 = summonerspell.CooldownExpires - Game.Time;
 					var s = string.Format("{0:0}", t2);
@@ -178,17 +174,17 @@
 					
                     switch (summonerspell.Name.ToLower())
                     {
-                        case "summonerflash":        summoner = "Flash";   break;
-                        case "summonerdot":          summoner = "Ignite";  break;
-                        case "summonerheal":         summoner = "Heal";    break;
-                        case "summonerteleport":     summoner = "Tele";    break;
-                        case "summonerexhaust":      summoner = "Exh.";    break;
-                        case "summonerhaste":        summoner = "Ghost";   break;
-                        case "summonerbarrier":      summoner = "Barr.";   break;
-                        case "summonerboost":        summoner = "Cleanse"; break;
-                        case "summonermana":         summoner = "Clarity"; break;
-                        case "summonerclairvoyance": summoner = "Clair.";  break;
-                        case "summonerodingarrison": summoner = "Garr.";   break;
+                        case "summonerflash":        summoner = "Flash";    break;
+                        case "summonerdot":          summoner = "Ignite";   break;
+                        case "summonerheal":         summoner = "Heal";     break;
+                        case "summonerteleport":     summoner = "Teleport"; break;
+                        case "summonerexhaust":      summoner = "Exhaust";  break;
+                        case "summonerhaste":        summoner = "Ghost";    break;
+                        case "summonerbarrier":      summoner = "Barrier";  break;
+                        case "summonerboost":        summoner = "Cleanse";  break;
+                        case "summonermana":         summoner = "Clarity";  break;
+                        case "summonerclairvoyance": summoner = "Clairity"; break;
+                        case "summonerodingarrison": summoner = "Garrison"; break;
 						//
                         default: 					 summoner = "Smite";   break;
                     }
@@ -198,7 +194,7 @@
 						(t2 > 0 && t2 < 400) ? summoner + ":" + s : summoner + ": UP",
 						sumx,
 						sumy,
-						(t2 > 0 && t2 < 400) ? SharpDX.Color.Gray : SharpDX.Color.Yellow
+						(t2 > 0 && t2 < 400) ? SharpDX.Color.Red : SharpDX.Color.Yellow
                     );
 				}
             }
