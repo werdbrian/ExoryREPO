@@ -1,5 +1,5 @@
 ﻿namespace NabbTracker
-{
+{	
 	using System;
 	using System.Linq;
 	using System.Collections.Generic;
@@ -25,32 +25,32 @@
 		/// <summary>
 		///	 The X coord of the HPBar screen position.
 		/// </summary>
-		int x;
+		int X;
 		
 		/// <summary>
 		///	 The Y coord of the HPBar screen position.
 		/// </summary>
-		int y;
+		int Y;
 		
 		/// <summary>
 		///	 The X coord of the Summonerspell-Tracker screen position.
 		/// </summary>
-		int sumx;
+		int SummonerSpellX;
 		
 		/// <summary>
 		///	 The Y coord of the Summonerspell-Tracker screen position.
 		/// </summary>
-		int sumy;
+		int SummonerSpellY;
 		
 		/// <summary>
 		///	 The X coord of the SpellLevel-Tracker screen position.
 		/// </summary>
-		int levelx;
+		int SpellLevelX;
 		
 		/// <summary>
 		///	 The Y coord of the SpellLevel-Tracker screen position.
 		/// </summary>
-		int levely;
+		int SpellLevelY;
 		
 		/// <summary>
 		///	 The Menu.
@@ -60,12 +60,12 @@
 		/// <summary>
 		///	 The Text fcnt.
 		/// </summary>
-		Font text;
+		Font DisplayTextFont = new Font(Drawing.Direct3DDevice, new System.Drawing.Font("Tahoma", 10));
 		
 		/// <summary>
 		///	 The SpellLevel Text font.
 		/// </summary>
-		Font level;
+		Font DisplayLevelFont = new Font(Drawing.Direct3DDevice, new System.Drawing.Font("Comic Sans", 14));
 		
 		/// <summary>
 		///	 The Player.
@@ -75,7 +75,7 @@
 		/// <summary>
 		///	 The Summoner-Spell name.
 		/// </summary>
-		string summoner;
+		string GetSummonerSpellName;
 		#endregion
 		
 		/// <summary>
@@ -100,13 +100,12 @@
 		/// </summary>
 		public Track()
 		{
-	
 			(Menu = new Menu("NabbTracker", "NabbTracker", true)).AddToMainMenu();
 			{
 				Menu.AddItem(new MenuItem("display.allies", "Track Allies").SetValue(true));
 				Menu.AddItem(new MenuItem("display.enemies", "Track Enemies").SetValue(true));
 				Menu.AddItem(new MenuItem("display.spell_levels", "Track Spell levels").SetValue(true));
-				Menu.AddItem(new MenuItem("display.font", "Font to display").SetValue(new StringList(new []{"Arial", "Tahoma", "Verdana", "Comic Sans"})));
+				//Menu.AddItem(new MenuItem("display.font", "Font to display").SetValue(new StringList(new []{"Arial", "Tahoma", "Verdana", "Comic Sans"})));
 			}
 			Menu.AddItem(new MenuItem("enable", "Enable").SetValue(true));
 		
@@ -120,91 +119,101 @@
 		/// </summary>
 		private void Drawing_OnDraw(EventArgs args)
 		{
+			/*
 			switch(Menu.Item("display.font").GetValue<StringList>().SelectedIndex)
 			{
-				case 0:  text = new Font(Drawing.Direct3DDevice, new System.Drawing.Font("Arial", 10));      break;
-				case 1:  text = new Font(Drawing.Direct3DDevice, new System.Drawing.Font("Tahoma", 10));     break;
-				case 2:  text = new Font(Drawing.Direct3DDevice, new System.Drawing.Font("Verdana", 10));    break;
-				default: text = new Font(Drawing.Direct3DDevice, new System.Drawing.Font("Comic Sans", 10)); break;
+				case 0:  ; break;
+				case 1:  ; break;
+				case 2:	 ; break;
+				default: ; break;
 			}
-
-			level = new Font(Drawing.Direct3DDevice, new System.Drawing.Font("Comic Sans", 14));
+			*/
 			
 			if (!Menu.Item("enable").GetValue<bool>()) return;
-	
-			foreach (var hero in HeroManager.AllHeroes.Where(hero => (hero.IsValid)
-				&& (!hero.IsMe)
-				&& (hero.IsHPBarRendered)
-				&& ((hero.IsEnemy && Menu.Item("display.enemies").GetValue<bool>()) 
-					|| (hero.IsAlly && Menu.Item("display.allies").GetValue<bool>())
-				)
-				&& (hero != null))){
+			
+			foreach (var PlayingCharacter in HeroManager.AllHeroes.Where(PlayingCharacter => (PlayingCharacter.IsValid)
+				&& (!PlayingCharacter.IsMe)
+				&& (PlayingCharacter != null)
+				&& (PlayingCharacter.IsHPBarRendered)
+				&& ((PlayingCharacter.IsEnemy && Menu.Item("display.enemies").GetValue<bool>()) 
+					|| (PlayingCharacter.IsAlly && Menu.Item("display.allies").GetValue<bool>())))
+				){
 				
-				for (int k = 0; k < SpellSlots.Count(); k++){
-					x = (int)hero.HPBarPosition.X + 10 + (k * 22);
-					y = (int)hero.HPBarPosition.Y + 32;
-					
-					levely = y + 5;
+				for (int Spell = 0; Spell < SpellSlots.Count(); Spell++){
+					X = (int)PlayingCharacter.HPBarPosition.X + 10 + (Spell * 22);
+					Y = (int)PlayingCharacter.HPBarPosition.Y + 32;
 	
-					var spell = hero.Spellbook.GetSpell(SpellSlots[k]);
-					var t = spell.CooldownExpires - Game.Time;
-					var s = string.Format("{0:0}", t);
+					var GetSpell = PlayingCharacter.Spellbook.GetSpell(SpellSlots[Spell]);
+					var GetSpellCD = GetSpell.CooldownExpires - Game.Time;
+					var SpellCDString = string.Format("{0:0}", GetSpellCD);
+					var IsSpellOnCD = GetSpellCD > 0;
+					var IsSpellNotLearned = PlayingCharacter.Spellbook.CanUseSpell(SpellSlots[Spell]) == SpellState.NotLearned;
 					
-					text.DrawText(
+					DisplayTextFont.DrawText(
 						null,
-						(t > 0 && t < 200) ? s : SpellSlots[k].ToString(),
-						x,
-						y,
-						(hero.Spellbook.CanUseSpell(SpellSlots[k]) == SpellState.NotLearned || (t > 0 && t < 200)) ? SharpDX.Color.Gray : SharpDX.Color.LightGreen
+						IsSpellOnCD ?
+						SpellCDString : SpellSlots[Spell].ToString(),
+						
+						X,
+						Y,
+						
+						IsSpellNotLearned || IsSpellOnCD ?
+						SharpDX.Color.Gray : SharpDX.Color.LightGreen
 					);
 					
 					if (Menu.Item("display.spell_levels").GetValue<bool>()){
-						for (int i = 0; i <= spell.Level - 1; i++){
-							levelx = x + (i * 3);
+					
+						for (int DrawSpellLevel = 0; DrawSpellLevel <= GetSpell.Level - 1; DrawSpellLevel++){
+							SpellLevelX = X + (DrawSpellLevel * 3);
+							SpellLevelY = Y + 5;
 							
-							level.DrawText(
+							DisplayLevelFont.DrawText(
 								null,
 								".",
-								levelx,
-								levely,
+								SpellLevelX,
+								SpellLevelY,
 								SharpDX.Color.White
 							);
 						}
 					}
 				}
 				
-				for (int m = 0; m < SummonerSpellSlots.Count(); m++){
-					sumx = (int)hero.HPBarPosition.X + 10 + (m * 77);
-					sumy = (int)hero.HPBarPosition.Y - 2;
+				for (int SummonerSpell = 0; SummonerSpell < SummonerSpellSlots.Count(); SummonerSpell++){
+					SummonerSpellX = (int)PlayingCharacter.HPBarPosition.X + 10 + (SummonerSpell * 77);
+					SummonerSpellY = (int)PlayingCharacter.HPBarPosition.Y - 2;
 					
-					var summonerspell = hero.Spellbook.GetSpell(SummonerSpellSlots[m]);
-					var t2 = summonerspell.CooldownExpires - Game.Time;
-					var s = string.Format("{0:0}", t2);
+					var GetSummonerSpell = PlayingCharacter.Spellbook.GetSpell(SummonerSpellSlots[SummonerSpell]);
+					var GetSummonerSpellCD = GetSummonerSpell.CooldownExpires - Game.Time;
+					var SummonerSpellCDString = string.Format("{0:0}", GetSummonerSpellCD);
+					var IsSummonerSpellOnCD = GetSummonerSpellCD > 0;
 					
-					
-					switch (summonerspell.Name.ToLower())
+					switch (GetSummonerSpell.Name.ToLower())
 					{
-						case "summonerflash":			summoner = "Flash";			break;
-						case "summonerdot":				summoner = "Ignite";		break;
-						case "summonerheal":			summoner = "Heal";			break;
-						case "summonerteleport":		summoner = "Teleport";		break;
-						case "summonerexhaust":			summoner = "Exhaust";		break;
-						case "summonerhaste":			summoner = "Ghost";			break;
-						case "summonerbarrier":			summoner = "Barrier";		break;
-						case "summonerboost":			summoner = "Cleanse";		break;
-						case "summonermana":			summoner = "Clarity";		break;
-						case "summonerclairvoyance":	summoner = "Clairvoyance";	break;
-						case "summonerodingarrison":	summoner = "Garrison";		break;
+						case "summonerflash":			GetSummonerSpellName = "Flash";			break;
+						case "summonerdot":				GetSummonerSpellName = "Ignite";		break;
+						case "summonerheal":			GetSummonerSpellName = "Heal";			break;
+						case "summonerteleport":		GetSummonerSpellName = "Teleport";		break;
+						case "summonerexhaust":			GetSummonerSpellName = "Exhaust";		break;
+						case "summonerhaste":			GetSummonerSpellName = "Ghost";			break;
+						case "summonerbarrier":			GetSummonerSpellName = "Barrier";		break;
+						case "summonerboost":			GetSummonerSpellName = "Cleanse";		break;
+						case "summonermana":			GetSummonerSpellName = "Clarity";		break;
+						case "summonerclairvoyance":	GetSummonerSpellName = "Clairvoyance";	break;
+						case "summonerodingarrison":	GetSummonerSpellName = "Garrison";		break;
 						// 
-						default:						summoner = "Smite";			break;
+						default:						GetSummonerSpellName = "Smite";			break;
 					}
 					
-					text.DrawText(
+					DisplayTextFont.DrawText(
 						null,
-						(t2 > 0 && t2 < 400) ? summoner + ":" + s : summoner + ": UP",
-						sumx,
-						sumy,
-						(t2 > 0 && t2 < 400) ? SharpDX.Color.Red : SharpDX.Color.Yellow
+						IsSummonerSpellOnCD ? 
+						GetSummonerSpellName + ":" + SummonerSpellCDString : GetSummonerSpellName + ": UP",
+						
+						SummonerSpellX,
+						SummonerSpellY,
+						
+						IsSummonerSpellOnCD ?
+						SharpDX.Color.Red : SharpDX.Color.Yellow
 					);
 				}
 			}
