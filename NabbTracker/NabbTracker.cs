@@ -105,7 +105,6 @@
 				Menu.AddItem(new MenuItem("display.allies", "Track Allies").SetValue(true));
 				Menu.AddItem(new MenuItem("display.enemies", "Track Enemies").SetValue(true));
 				Menu.AddItem(new MenuItem("display.spell_levels", "Track Spell levels").SetValue(true));
-				//Menu.AddItem(new MenuItem("display.font", "Font to display").SetValue(new StringList(new []{"Arial", "Tahoma", "Verdana", "Comic Sans"})));
 			}
 			Menu.AddItem(new MenuItem("enable", "Enable").SetValue(true));
 		
@@ -119,16 +118,6 @@
 		/// </summary>
 		private void Drawing_OnDraw(EventArgs args)
 		{
-			/*
-			switch(Menu.Item("display.font").GetValue<StringList>().SelectedIndex)
-			{
-				case 0:  ; break;
-				case 1:  ; break;
-				case 2:	 ; break;
-				default: ; break;
-			}
-			*/
-			
 			if (!Menu.Item("enable").GetValue<bool>()) return;
 			
 			foreach (var PlayingCharacter in HeroManager.AllHeroes.Where(PlayingCharacter => (PlayingCharacter.IsValid)
