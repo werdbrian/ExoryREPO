@@ -23,34 +23,34 @@
         #region variables
         
         /// <summary>
-        ///     The X coord of the HPBar screen position.
+        ///     Gets the Y coord. of the HPBar screen position.
         /// </summary>
         int X;
         
         /// <summary>
-        ///     The Y coord of the HPBar screen position.
+        ///     Gets the Y coord. of the HPBar screen position.
         /// </summary>
         int Y;
-        
+
         /// <summary>
-        ///     The X coord of the Summonerspell-Tracker screen position.
-        /// </summary>
-        int SummonerSpellX;
-        
-        /// <summary>
-        ///     The Y coord of the Summonerspell-Tracker screen position.
-        /// </summary>
-        int SummonerSpellY;
-        
-        /// <summary>
-        ///     The X coord of the SpellLevel-Tracker screen position.
+        ///     Gets the X coord. of the spell-tracker's screen position.
         /// </summary>
         int SpellLevelX;
         
         /// <summary>
-        ///     The Y coord of the SpellLevel-Tracker screen position.
+        ///     Gets the Y coord. of the spell-tracker's screen position.
         /// </summary>
         int SpellLevelY;
+        
+        /// <summary>
+        ///     Gets the X coord of the Summonerspell-Tracker screen position.
+        /// </summary>
+        int SummonerSpellX;
+        
+        /// <summary>
+        ///     Gets the Y coord. of the summonerspell-tracker's screen position.
+        /// </summary>
+        int SummonerSpellY;
         
         /// <summary>
         ///     The Menu.
@@ -66,20 +66,15 @@
         ///     The SpellLevel Text font.
         /// </summary>
         Font DisplayLevelFont = new Font(Drawing.Direct3DDevice, new System.Drawing.Font("Comic Sans", 14));
-        
+     
         /// <summary>
-        ///     The Player.
-        /// </summary>
-        public static Obj_AI_Hero Player = ObjectManager.Player;
-        
-        /// <summary>
-        ///     The Summoner-Spell name.
+        ///     Gets the Summoner-Spell name.
         /// </summary>
         string GetSummonerSpellName;
         #endregion
         
         /// <summary>
-        ///     The SpellSlots
+        ///     Gets the Spellslots
         /// </summary>
         private SpellSlot[]
             SpellSlots = {
@@ -96,7 +91,7 @@
         ;
 
         /// <summary>
-        ///     The Tracker.
+        ///     The tracker.
         /// </summary>
         public Track()
         {
@@ -112,10 +107,10 @@
             Notifications.AddNotification("NabbTracker - Loaded", 3000);
         }
 
-        // <summary>
-        ///     Drawing_OnDraw event, specifies a drawing callback which is after IDirect3DDevice9::BeginScene and before
-        ///     IDirect3DDevice9::EndScene.
+        /// <summary>
+        ///     Called when the game draws itself.
         /// </summary>
+        /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
         private void Drawing_OnDraw(EventArgs args)
         {
             if (!Menu.Item("enable").GetValue<bool>()) return;
@@ -161,13 +156,14 @@
                                 ".",
                                 SpellLevelX,
                                 SpellLevelY,
-                                SharpDX.Color.White
+                                SharpDX.Color.White    
                             );
                         }
                     }
                 }
                 
-                for (int SummonerSpell = 0; SummonerSpell < SummonerSpellSlots.Count(); SummonerSpell++){
+                for (int SummonerSpell = 0; SummonerSpell < SummonerSpellSlots.Count(); SummonerSpell++)
+                {
                     SummonerSpellX = (int)PlayingCharacter.HPBarPosition.X + 10 + (SummonerSpell * 77);
                     SummonerSpellY = (int)PlayingCharacter.HPBarPosition.Y - 2;
                     
@@ -178,25 +174,25 @@
                     
                     switch (GetSummonerSpell.Name.ToLower())
                     {
-                        case "summonerflash":            GetSummonerSpellName = "Flash";            break;
-                        case "summonerdot":                GetSummonerSpellName = "Ignite";        break;
+                        case "summonerflash":           GetSummonerSpellName = "Flash";           break;
+                        case "summonerdot":             GetSummonerSpellName = "Ignite";          break;
                         case "summonerheal":            GetSummonerSpellName = "Heal";            break;
                         case "summonerteleport":        GetSummonerSpellName = "Teleport";        break;
-                        case "summonerexhaust":            GetSummonerSpellName = "Exhaust";        break;
-                        case "summonerhaste":            GetSummonerSpellName = "Ghost";            break;
-                        case "summonerbarrier":            GetSummonerSpellName = "Barrier";        break;
-                        case "summonerboost":            GetSummonerSpellName = "Cleanse";        break;
-                        case "summonermana":            GetSummonerSpellName = "Clarity";        break;
+                        case "summonerexhaust":         GetSummonerSpellName = "Exhaust";         break;
+                        case "summonerhaste":           GetSummonerSpellName = "Ghost";           break;
+                        case "summonerbarrier":         GetSummonerSpellName = "Barrier";         break;
+                        case "summonerboost":           GetSummonerSpellName = "Cleanse";         break;
+                        case "summonermana":            GetSummonerSpellName = "Clarity";         break;
                         case "summonerclairvoyance":    GetSummonerSpellName = "Clairvoyance";    break;
                         case "summonerodingarrison":    GetSummonerSpellName = "Garrison";        break;
                         // 
-                        default:                        GetSummonerSpellName = "Smite";            break;
+                        default:                        GetSummonerSpellName = "Smite";           break;
                     }
                     
                     DisplayTextFont.DrawText(
                         null,
                         IsSummonerSpellOnCD ? 
-                        GetSummonerSpellName + ":" + SummonerSpellCDString : GetSummonerSpellName + ": UP",
+                        GetSummonerSpellName + ":" + SummonerSpellCDString : GetSummonerSpellName + ": UP ",
                         
                         SummonerSpellX,
                         SummonerSpellY,
