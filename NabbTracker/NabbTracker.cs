@@ -185,6 +185,7 @@
                         case "summonermana":            GetSummonerSpellName = "Clarity";         break;
                         case "summonerclairvoyance":    GetSummonerSpellName = "Clairvoyance";    break;
                         case "summonerodingarrison":    GetSummonerSpellName = "Garrison";        break;
+                        case "summonersnowball":        GetSummonerSpellName = "Mark";            break; // ARAM Only
                         // 
                         default:                        GetSummonerSpellName = "Smite";           break;
                     }
