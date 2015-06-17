@@ -2,5 +2,6 @@
 My LeagueSharp Assemblies.
 
 Current on work:
-- NabbTracker
-- ? Kappa
+- NabbTracker;
+- NabbPotter;
+- ? Kappa;
