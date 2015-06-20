@@ -64,7 +64,8 @@
             return (ObjectManager.Player.HasBuff("FizzMarinerDoom")
              || ObjectManager.Player.HasBuff("zedulttargetmark")
              || ObjectManager.Player.HasBuff("VladimirHemoplague")
-             || ObjectManager.Player.HasBuff("MordekaiserChildrenOfTheGrave"))
+             || ObjectManager.Player.HasBuff("MordekaiserChildrenOfTheGrave")
+             || ObjectManager.Player.HasBuff("nocturneparanoia"))
              && Menu.Item("use.cleansers").GetValue<bool>()
             ; 
         }
