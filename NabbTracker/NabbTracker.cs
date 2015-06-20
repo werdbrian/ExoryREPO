@@ -104,7 +104,6 @@
             Menu.AddItem(new MenuItem("enable", "Enable").SetValue(true));
         
             Drawing.OnDraw += Drawing_OnDraw;
-            Notifications.AddNotification("NabbTracker - Loaded", 3000);
         }
 
         /// <summary>

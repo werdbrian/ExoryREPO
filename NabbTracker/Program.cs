@@ -5,18 +5,19 @@ using LeagueSharp.Common;
 
 namespace NabbTracker
 {
-	class Program
-	{
-		public static Track Track;
+    class Program
+    {
+        public static Track Track;
 
-		public static void Main(string[] args){
+        public static void Main(string[] args){
 
-			CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
-		}
+            CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
+        }
 
-		private static void Game_OnGameLoad(EventArgs args){
+        private static void Game_OnGameLoad(EventArgs args){
 
-			Track = new Track();
-		}
-	}
+            Track = new Track();
+            Notifications.AddNotification("NabbTracker - Loaded", 3000);
+        }
+    }
 }
