@@ -71,7 +71,7 @@
         
         bool CanAndShouldCleanseIfIgnited()
         {
-            return ObjectManager.HasBuff("summonerdot")
+            return ObjectManager.Player.HasBuff("summonerdot")
              && Menu.Item("use.cleansevsignite").GetValue<bool>()
             ;
         }
