@@ -47,7 +47,7 @@
         bool ShouldUseCleanse()
         {
             return (ObjectManager.Player.HasBuffOfType(BuffType.Charm)
-             || ObjectManager.Player.HasBuffOfType(BuffType.CombatDehancer)
+//             || ObjectManager.Player.HasBuffOfType(BuffType.CombatDehancer)
              || ObjectManager.Player.HasBuffOfType(BuffType.Fear)
              || ObjectManager.Player.HasBuffOfType(BuffType.Knockup)
              || ObjectManager.Player.HasBuffOfType(BuffType.Polymorph)
