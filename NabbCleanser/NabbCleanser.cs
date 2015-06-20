@@ -36,6 +36,7 @@
             {
                 Menu.AddItem(new MenuItem("use.cleanse", "Use Cleanse.").SetValue(true));
                 Menu.AddItem(new MenuItem("use.cleansers", "Use Cleansers.").SetValue(true));
+                Menu.AddItem(new MenuItem("use.cleansevsignite", "Cleanse enemy Ignite.").SetValue(true));
                 Menu.AddItem(new MenuItem("use.info", "Cleansers = QSS, Dervish, Mercurial, Mikaels"));
             }
             Menu.AddItem(new MenuItem("enable", "Enable").SetValue(true));
@@ -45,7 +46,7 @@
         
         bool ShouldUseCleanse()
         {
-            return ObjectManager.Player.HasBuffOfType(BuffType.Charm)
+            return (ObjectManager.Player.HasBuffOfType(BuffType.Charm)
              || ObjectManager.Player.HasBuffOfType(BuffType.CombatDehancer)
              || ObjectManager.Player.HasBuffOfType(BuffType.Fear)
              || ObjectManager.Player.HasBuffOfType(BuffType.Knockup)
@@ -53,17 +54,26 @@
              || ObjectManager.Player.HasBuffOfType(BuffType.Snare)
              || ObjectManager.Player.HasBuffOfType(BuffType.Stun)
              || ObjectManager.Player.HasBuffOfType(BuffType.Suppression)
-             || ObjectManager.Player.HasBuffOfType(BuffType.Taunt)
+             || ObjectManager.Player.HasBuffOfType(BuffType.Taunt))
+             && Menu.Item("use.cleanse").GetValue<bool>()
             ; 
         }
 
         bool ShouldUseCleanser()
         {
-            return ObjectManager.Player.HasBuff("FizzMarinerDoom")
+            return (ObjectManager.Player.HasBuff("FizzMarinerDoom")
              || ObjectManager.Player.HasBuff("zedulttargetmark")
              || ObjectManager.Player.HasBuff("VladimirHemoplague")
-             || ObjectManager.Player.HasBuff("MordekaiserChildrenOfTheGrave")
+             || ObjectManager.Player.HasBuff("MordekaiserChildrenOfTheGrave"))
+             && Menu.Item("use.cleansers").GetValue<bool>()
             ; 
+        }
+        
+        bool CanAndShouldCleanseIfIgnited()
+        {
+            return ObjectManager.HasBuff("summonerdot")
+             && Menu.Item("use.cleansevsignite").GetValue<bool>()
+            ;
         }
         
         private void UseCleanser()
@@ -100,7 +110,7 @@
             
             cleanse = ObjectManager.Player.GetSpellSlot("summonerboost");
             
-            if (ShouldUseCleanse() && Menu.Item("use.cleanse").GetValue<bool>())
+            if (ShouldUseCleanse() || CanAndShouldCleanseIfIgnited())
             {        
                 if (cleanse != SpellSlot.Unknown 
                  && ObjectManager.Player.Spellbook.CanUseSpell(cleanse) == SpellState.Ready)
@@ -111,7 +121,7 @@
                 ;
             }
             
-            if (ShouldUseCleanser() && Menu.Item("use.cleansers").GetValue<bool>())
+            if (ShouldUseCleanser())
             {
                 UseCleanser();
             }
