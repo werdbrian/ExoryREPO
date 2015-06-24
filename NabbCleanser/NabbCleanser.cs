@@ -114,25 +114,25 @@
             if (!Menu.Item("enable").GetValue<bool>()) return;
 			
             if (Menu.Item("panic_key_enable").GetValue<bool>() 
-				&& Menu.Item("use.panic_key").GetValue<KeyBind>().Active)
-				|| (!Menu.Item("panic_key_enable").GetValue<bool>()){
-					cleanse = ObjectManager.Player.GetSpellSlot("summonerboost");
+				&& Menu.Item("use.panic_key").GetValue<KeyBind>().Active
+				|| (!Menu.Item("panic_key_enable").GetValue<bool>()))
+				{
+				cleanse = ObjectManager.Player.GetSpellSlot("summonerboost");
 					
-					if (ShouldUseCleanse() || CanAndShouldCleanseIfIgnited())
-					{        
-						if (cleanse != SpellSlot.Unknown 
-						 && ObjectManager.Player.Spellbook.CanUseSpell(cleanse) == SpellState.Ready)
-						
-							ObjectManager.Player.Spellbook.CastSpell(cleanse, ObjectManager.Player);
-						else 
-							UseCleanser();
-						;
-					}
+				if (ShouldUseCleanse() || CanAndShouldCleanseIfIgnited())
+				{        
+					if (cleanse != SpellSlot.Unknown 
+					 && ObjectManager.Player.Spellbook.CanUseSpell(cleanse) == SpellState.Ready)
 					
-					if (ShouldUseCleanser())
-					{
+						ObjectManager.Player.Spellbook.CastSpell(cleanse, ObjectManager.Player);
+					else 
 						UseCleanser();
-					}
+					;
+				}
+				
+				if (ShouldUseCleanser())
+				{
+					UseCleanser();
 				}	
 			}	
         }
