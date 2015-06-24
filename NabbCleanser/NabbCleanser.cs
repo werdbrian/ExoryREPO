@@ -38,6 +38,9 @@
                 Menu.AddItem(new MenuItem("use.cleansers", "Use Cleansers.").SetValue(true));
                 Menu.AddItem(new MenuItem("use.cleansevsignite", "Cleanse enemy Ignite.").SetValue(true));
                 Menu.AddItem(new MenuItem("use.info", "Cleansers = QSS, Dervish, Mercurial, Mikaels"));
+				Menu.AddItem(new MenuItem("use.separator", ""));
+				Menu.AddItem(new MenuItem("panic_key_enable", "Only Cleanse when pressed button enable").SetValue(true));
+				Menu.AddItem(new MenuItem("use.panic_key", "Only Cleanse when pressed button").SetValue(new KeyBind(32, KeyBindType.Press)));
             }
             Menu.AddItem(new MenuItem("enable", "Enable").SetValue(true));
 
@@ -109,24 +112,29 @@
         private void Game_OnGameUpdate(EventArgs args)
         {
             if (!Menu.Item("enable").GetValue<bool>()) return;
-            
-            cleanse = ObjectManager.Player.GetSpellSlot("summonerboost");
-            
-            if (ShouldUseCleanse() || CanAndShouldCleanseIfIgnited())
-            {        
-                if (cleanse != SpellSlot.Unknown 
-                 && ObjectManager.Player.Spellbook.CanUseSpell(cleanse) == SpellState.Ready)
-                
-                    ObjectManager.Player.Spellbook.CastSpell(cleanse, ObjectManager.Player);
-                else 
-                    UseCleanser();
-                ;
-            }
-            
-            if (ShouldUseCleanser())
-            {
-                UseCleanser();
-            }
+			
+            if (Menu.Item("panic_key_enable").GetValue<bool>() 
+				&& Menu.Item("use.panic_key").GetValue<KeyBind>().Active)
+				|| (!Menu.Item("panic_key_enable").GetValue<bool>()){
+					cleanse = ObjectManager.Player.GetSpellSlot("summonerboost");
+					
+					if (ShouldUseCleanse() || CanAndShouldCleanseIfIgnited())
+					{        
+						if (cleanse != SpellSlot.Unknown 
+						 && ObjectManager.Player.Spellbook.CanUseSpell(cleanse) == SpellState.Ready)
+						
+							ObjectManager.Player.Spellbook.CastSpell(cleanse, ObjectManager.Player);
+						else 
+							UseCleanser();
+						;
+					}
+					
+					if (ShouldUseCleanser())
+					{
+						UseCleanser();
+					}
+				}	
+			}	
         }
     }
 }
