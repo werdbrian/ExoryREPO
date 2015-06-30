@@ -123,8 +123,11 @@
 				{        
 					if (cleanse != SpellSlot.Unknown 
 					 && ObjectManager.Player.Spellbook.CanUseSpell(cleanse) == SpellState.Ready)
-					
-						ObjectManager.Player.Spellbook.CastSpell(cleanse, ObjectManager.Player);
+                        if (ObjectManager.Player.HasBuff("zedulttargetmark"))
+							Utility.DelayAction.Add(4000, () => ObjectManager.Player.Spellbook.CastSpell(cleanse, ObjectManager.Player));
+						else	
+							ObjectManager.Player.Spellbook.CastSpell(cleanse, ObjectManager.Player)
+						;
 					else 
 						UseCleanser();
 					;
