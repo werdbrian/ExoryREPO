@@ -47,9 +47,15 @@
         
         bool IsPotRunning()
         {
-            return ObjectManager.Player.HasBuff("ItemMiniRegenPotion")
+            return
+                // Biscuit
+                ObjectManager.Player.HasBuff("ItemMiniRegenPotion")
+                // Flask
              || ObjectManager.Player.HasBuff("ItemCrystalFlask")
+                // HealthPot
              || ObjectManager.Player.HasBuff("RegenerationPotion")
+                // ManaPot
+             || ObjectManager.Player.HasBuff("FlaskOfCrystalWater")
             ;
         }
         
@@ -59,33 +65,44 @@
         /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
         private void Game_OnGameUpdate(EventArgs args)
         {
-            //Don't use potions if not enabled or a potion is already being used.
+            // Don't use potions if not enabled..
             if (!Menu.Item("enable").GetValue<bool>()) return;
+            
+              // ..or if a potion is already being used.
             if (IsPotRunning()) return;
             
-            // If Health is lower than the config value and the player has an Health Potion, if he does not have it, use the Biscuit. 
+            // If Health is lower than the config value..
             if (ObjectManager.Player.HealthPercent <= Menu.Item("use.on_health_percent").GetValue<Slider>().Value)
             {
+                // and the player has an Health Potion...
                 if (Items.HasItem(HealthPot))
                 
+                    // ..use it.
                     Items.UseItem(HealthPot);
                 
-                else 
+                // but if the player has not Health Potions left..
+                else
+                    
+                    // ..use the biscuit.
                     Items.UseItem(Biscuit)
                 ;
             }
             
-            //If Mana is lower than the config value, use the Mana Potion.
+            // If Mana is lower than the config value..
             if (ObjectManager.Player.ManaPercent <= Menu.Item("use.on_mana_percent").GetValue<Slider>().Value)
             {
+                // ..use the Mana Potion.
                 Items.UseItem(ManaPot);
             }
             
-            //If both Health and Mana are lower than the config value OR the player Health is half the percent on the config (supposed to be very low, like 25%), use the Flask.
+            // If both Health and Mana are lower than the config value..
             if ((ObjectManager.Player.HealthPercent <= Menu.Item("use.on_health_percent").GetValue<Slider>().Value
              && ObjectManager.Player.ManaPercent <= Menu.Item("use.on_mana_percent").GetValue<Slider>().Value)
+             
+             // or the player Health is half the percent on the config (supposed to be very low, like 25%)..
              || ObjectManager.Player.HealthPercent <= (Menu.Item("use.on_health_percent").GetValue<Slider>().Value / 2))
             {
+                //..use the Flask.
                 Items.UseItem(Flask);
             } 
         }
