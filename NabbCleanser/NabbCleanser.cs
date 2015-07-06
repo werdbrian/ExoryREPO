@@ -54,34 +54,48 @@
         
         bool ShouldUseCleanse()
         {
+            // return "true" if the Player is being affected by..
             return (
+                // ..Charms..
                 ObjectManager.Player.HasBuffOfType(BuffType.Charm)
-             || ObjectManager.Player.HasBuffOfType(BuffType.Fear)
+                
+             // ..Fears..
              || ObjectManager.Player.HasBuffOfType(BuffType.Flee)
+             
+             // ..Polymorphs..
              || ObjectManager.Player.HasBuffOfType(BuffType.Polymorph)
+             
+             // ..Snares..
              || ObjectManager.Player.HasBuffOfType(BuffType.Snare)
+             
+             // ..Stuns..
              || ObjectManager.Player.HasBuffOfType(BuffType.Stun)
+             
+             // ..Suppressions..
              || ObjectManager.Player.HasBuffOfType(BuffType.Suppression)
+             
+             // ..Taunts..
              || ObjectManager.Player.HasBuffOfType(BuffType.Taunt)
             )
+             // ..and the relative option is enabled.
              && Menu.Item("use.cleanse").GetValue<bool>()
             ; 
         }
 
         bool ShouldUseCleanser()
         {
-            // return "true" if the Player has..
+            // return "true" if the Player is being affected by..
             return (
-                // ..Zeds Target Mark (R)..
+                // ..Zed's Target Mark (R)..
                 ObjectManager.Player.HasBuff("zedulttargetmark")
 
-             // ..or Vladimirs Mark (R)..
+             // ..or Vladimir's Mark (R)..
              || ObjectManager.Player.HasBuff("VladimirHemoplague")
              
-             // ..or Mordekaisers Mark (R)..
+             // ..or Mordekaiser's Mark (R)..
              || ObjectManager.Player.HasBuff("MordekaiserChildrenOfTheGrave")
              
-             // ..or Poppys Immunity Mark (R)..
+             // ..or Poppy's Immunity Mark (R)..
              || ObjectManager.Player.HasBuff("PoppyDiplomaticImmunity")
              
              // ..or Fizz's Fish Mark (R)..
