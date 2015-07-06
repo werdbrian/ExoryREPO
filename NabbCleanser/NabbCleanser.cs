@@ -129,7 +129,7 @@
                 // ..JUST (DO)USE IT!
                 Items.UseItem(QSS);
             
-            // else if the player has Dervish Blase and is able to use it..
+            // else if the player has Dervish Blade and is able to use it..
             else if (Items.HasItem(Dervish) && Items.CanUseItem(Dervish)) 
             
                 // ..JUST (DO)USE IT!
@@ -141,7 +141,7 @@
                 // ..JUST (DO)USE IT!
                 Items.UseItem(Mikaels);
                 
-            // else if the player has Mercurial Blade and is able to use it..
+            // else if the player has Mercurial Scimitar and is able to use it..
             else if (Items.HasItem(Mercurial) && Items.CanUseItem(Mercurial))
             
                 // ..JUST (DO)USE IT!
