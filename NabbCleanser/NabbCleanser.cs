@@ -57,7 +57,7 @@
             return (
                 ObjectManager.Player.HasBuffOfType(BuffType.Charm)
              || ObjectManager.Player.HasBuffOfType(BuffType.Fear)
-             || ObjectManager.Player.HasBuffOfType(BuffType.Knockup)
+			 || ObjectManager.Player.HasBuffOfType(BuffType.Flee)
              || ObjectManager.Player.HasBuffOfType(BuffType.Polymorph)
              || ObjectManager.Player.HasBuffOfType(BuffType.Snare)
              || ObjectManager.Player.HasBuffOfType(BuffType.Stun)
