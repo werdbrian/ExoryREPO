@@ -74,10 +74,7 @@
             return (
                 // ..Zeds Target Mark (R)..
                 ObjectManager.Player.HasBuff("zedulttargetmark")
-                
-             // ..or Warwicks Suppression (R)..
-             || ObjectManager.Player.HasBuff("InfiniteDuress")
-             
+
              // ..or Vladimirs Mark (R)..
              || ObjectManager.Player.HasBuff("VladimirHemoplague")
              
@@ -126,18 +123,19 @@
         
         private void UseCleanser()
         {
-            // if the player has QSS and is able to use it..
+            // if the player has QuickSilver Sash and is able to use it..
             if (Items.HasItem(QSS) && Items.CanUseItem(QSS))
             
                 // ..JUST (DO)USE IT!
                 Items.UseItem(QSS);
             
+            // else if the player has Dervish Blase and is able to use it..
             else if (Items.HasItem(Dervish) && Items.CanUseItem(Dervish)) 
             
                 // ..JUST (DO)USE IT!
                 Items.UseItem(Dervish);
                 
-            // else if the player has Mikaels and is able to use it..
+            // else if the player has Mikaels Crucible and is able to use it..
             else if (Items.HasItem(Mikaels) && Items.CanUseItem(Mikaels)) 
             
                 // ..JUST (DO)USE IT!
