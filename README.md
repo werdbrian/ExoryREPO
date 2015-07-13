@@ -22,3 +22,4 @@ Current on work:
 - NabbTracker;
 - NabbPotter;
 - NabbCleanser;
+- [SDK]NabbEssentials;
