@@ -109,9 +109,11 @@ namespace NabbPotter
         /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
         private void OnUpdate(EventArgs args)
         {
-            
             // don't use another potion if a potion is already being used.
             if (IsPotRunning()) return;
+            
+            // ..or the player is in base.
+            if (this.Player.InFountain()) return;
             
             // If Health is lower than the config value..
             if (this.Player.HealthPercent <= Menu["use.on_health_percent"].GetValue<MenuSlider>().Value)
@@ -142,7 +144,10 @@ namespace NabbPotter
              && this.Player.ManaPercent <= this.Menu["use.on_mana_percent"].GetValue<MenuSlider>().Value)
              
              // or the player Health is half the percent on the config (supposed to be very low, like 25%)..
-             || this.Player.HealthPercent <= (this.Menu["use.on_health_percent"].GetValue<MenuSlider>().Value / 2))
+             || this.Player.HealthPercent <= (this.Menu["use.on_health_percent"].GetValue<MenuSlider>().Value / 2)
+             
+             // or the player Mana is half the percent on the config (supposed to be very low, like 25%)..
+             || this.Player.ManaPercent <= (this.Menu["use.on_mana_percent"].GetValue<MenuSlider>().Value / 2))
             {
                 //..use the Flask.
                 Items.UseItem(Flask);
