@@ -68,8 +68,11 @@
             // Don't use potions if not enabled..
             if (!Menu.Item("enable").GetValue<bool>()) return;
             
-              // ..or if a potion is already being used.
+            // ..or a potion is already being used..
             if (IsPotRunning()) return;
+            
+            // ..or the player is in base.
+            if (ObjectManager.Player.InFountain()) return;
             
             // If Health is lower than the config value..
             if (ObjectManager.Player.HealthPercent <= Menu.Item("use.on_health_percent").GetValue<Slider>().Value)
@@ -100,7 +103,10 @@
              && ObjectManager.Player.ManaPercent <= Menu.Item("use.on_mana_percent").GetValue<Slider>().Value)
              
              // or the player Health is half the percent on the config (supposed to be very low, like 25%)..
-             || ObjectManager.Player.HealthPercent <= (Menu.Item("use.on_health_percent").GetValue<Slider>().Value / 2))
+             || ObjectManager.Player.HealthPercent <= (Menu.Item("use.on_health_percent").GetValue<Slider>().Value / 2)
+             
+             // or the player Mana is half the percent on the config (supposed to be very low, like 25%)..
+             || ObjectManager.Player.ManaPercent <= (Menu.Item("use.on_mana_percent").GetValue<Slider>().Value / 2))
             {
                 //..use the Flask.
                 Items.UseItem(Flask);
