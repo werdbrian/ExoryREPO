@@ -232,28 +232,26 @@ namespace NabbCleanser
                     // If the player actually has the summonerspell Cleanse and it is ready to use..
                     if (cleanse != SpellSlot.Unknown && IsCleanseReady)
                     
-                        // If the player is being affected by the DeathMark..
-                        if (HasZedTargetMark)
-                            // ..Double the delay..
-                            DelayAction.Add(CleanseDelay*2, () => Player.Spellbook.CastSpell(cleanse, Player));
-                        
-                        else
-                            // ..Use the normal delay.
-                            DelayAction.Add(CleanseDelay, () => Player.Spellbook.CastSpell(cleanse, Player))
-                        ;
-
-                    // ..else..    
-                    else
-                        // ..try to use a cleanser item.
-                        DelayAction.Add(CleanseDelay, () => UseCleanser());
+                        // ..Use the normal delay.
+                        DelayAction.Add(CleanseDelay, () => Player.Spellbook.CastSpell(cleanse, Player))
                     ;
                 }
                 
                 // If the player is being affected by Hard CC or a Second-priority ult mark..
                 if (ShouldUseCleanser() || ShouldUseSecondPriorityCleanser())
                 {
-                    // ..JUST (DO)CLEANSE IT!
-                    DelayAction.Add(CleanseDelay, () => UseCleanser());
+                    // If the player is being affected by the DeathMark..
+                    if (HasZedTargetMark)
+                    
+                        // ..Double the delay before cleansing..
+                        DelayAction.Add(CleanseDelay*2, () => UseCleanser());
+                        
+                    //..else..
+                    else
+                    
+                        // ..JUST (DO)CLEANSE IT!
+                        DelayAction.Add(CleanseDelay, () => UseCleanser())
+                    ;
                 }
             }    
         }
