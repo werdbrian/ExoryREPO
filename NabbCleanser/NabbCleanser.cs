@@ -190,7 +190,7 @@
                         if (HasZedTargetMark)
                             
                             // ..Cleanse it, but delay the action by 4 seconds.
-                            Utility.DelayAction.Add(4000, () => UseCleanser());
+                            Utility.DelayAction.Add(4000, () => ObjectManager.Player.Spellbook.CastSpell(cleanse, ObjectManager.Player));
                             
                         // ..else..    
                         else
