@@ -186,32 +186,28 @@
                     // If the player actually has the summonerspell Cleanse and it is ready to use..
                     if (cleanse != SpellSlot.Unknown && IsCleanseReady)
                     
-                        // If the player is being affected by the DeathMark..
-                        if (HasZedTargetMark)
-                            
-                            // ..Cleanse it, but delay the action by 4 seconds.
-                            Utility.DelayAction.Add(4000, () => ObjectManager.Player.Spellbook.CastSpell(cleanse, ObjectManager.Player));
-                            
-                        // ..else..    
-                        else
-                            // ..JUST (DO)CLEANSE IT!
-                            ObjectManager.Player.Spellbook.CastSpell(cleanse, ObjectManager.Player)
-                        ;
-                        
-                    // ..else..    
-                    else
-                        // ..try to use a cleanser item.
-                        UseCleanser()
+                        // ..JUST (DO)CLEANSE IT!
+                        ObjectManager.Player.Spellbook.CastSpell(cleanse, ObjectManager.Player)
                     ;
                 }
                 
                 // If the player is being affected by Hard CC or a Second-priority ult mark..
                 if (ShouldUseCleanser() /*|| ShouldUseSecondPriorityCleanser()*/)
                 {
-                    // ..JUST (DO)CLEANSE IT!
-                    UseCleanser();
+                    // If the player is being affected by the DeathMark..
+                    if (HasZedTargetMark)
+                        
+                        // ..Cleanse it, but delay the action by 4 seconds.
+                        Utility.DelayAction.Add(4000, () => UseCleanser());
+                        
+                    // ..else..
+                    else
+                    
+                        // ..JUST (DO)CLEANSE IT!
+                        UseCleanser()
+                    ;
                 }
-            }    
+            }
         }
     }
 }
