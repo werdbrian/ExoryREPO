@@ -102,6 +102,19 @@ namespace NabbCleanser
             Game.OnUpdate += this.OnUpdate;
         }
         
+        bool HasNoProtection()
+        {
+            // return "true" if the Player..
+            return 
+                
+                //..has no SpellShield..
+                !this.Player.HasBuffOfType(BuffType.SpellShield)
+                
+             //..nor SpellImmunity.  
+             && !this.Player.HasBuffOfType(BuffType.SpellImmunity)
+            ; 
+        }
+        
         bool ShouldUseCleanse()
         {
             // return "true" if the Player is being affected by..
@@ -109,24 +122,31 @@ namespace NabbCleanser
                 // ..Charms..
                 this.Player.HasBuffOfType(BuffType.Charm)
                 
-             // ..Fears..
+             // ..or Fears..
              || this.Player.HasBuffOfType(BuffType.Flee)
              
-             // ..Polymorphs..
+             // ..or Polymorphs..
              || this.Player.HasBuffOfType(BuffType.Polymorph)
              
-             // ..Snares..
+             // ..or Snares..
              || this.Player.HasBuffOfType(BuffType.Snare)
              
-             // ..Stuns..
+             // ..or Stuns..
              || this.Player.HasBuffOfType(BuffType.Stun)
              
-             // ..Suppressions..
+             // ..or Suppressions..
              || this.Player.HasBuffOfType(BuffType.Suppression)
              
-             // ..Taunts..
+             // ..or Taunts..
              || this.Player.HasBuffOfType(BuffType.Taunt)
+             
+             // ..or Exhaust..
+             || this.Player.HasBuff("summonerexhaust")
+             
             )
+             //..and, if he has no protection..
+             && HasNoProtection()
+            
              // ..and the relative option is enabled.
              && this.Menu["use.cleanse"].GetValue<MenuBool>().Value
             ; 
@@ -150,39 +170,18 @@ namespace NabbCleanser
              
              // ..or Fizz's Fish Mark (R)..
              || this.Player.HasBuff("FizzMarinerDoom")
+             
+             // ..or Malzahar's Ultimate..
+             || this.Player.HasBuff("AlZaharNetherGrasp")
             )
+             //..and, if he has no protection..
+             && HasNoProtection()
+            
              // ..and the relative option is enabled.
              && this.Menu["use.cleansers"].GetValue<MenuBool>().Value
             ; 
         }
-        
 
-        bool ShouldUseSecondPriorityCleanser()
-        {
-            // return "true" if the Player has..
-            return (
-                // ..Twisted Fates vision mark (R)..
-                this.Player.Buffs.Any(b => b.Name.Contains("Twisted"))
-                
-             // ..Nocturnes R (Fog part)..
-             || this.Player.Buffs.Any(b => b.Name.Contains("Nocturne"))
-            )
-            
-            // ..and the relative option is enabled.
-            && this.Menu["use.cleansers.second.priority"].GetValue<MenuBool>().Value; 
-        }
-        
-        bool CanAndShouldCleanseIfIgnited()
-        {
-            // return "true" if..
-            return 
-                // ..the player is ignited..
-                this.Player.HasBuff("summonerdot")
-                
-            // ..and the relative option is enabled.
-            && this.Menu["use.cleansevsignite"].GetValue<MenuBool>().Value;
-        }
-        
         private void UseCleanser()
         {
             // if the player has QuickSilver Sash and is able to use it..
@@ -211,6 +210,35 @@ namespace NabbCleanser
             ;
         }
         
+        bool ShouldUseSecondPriorityCleanser()
+        {
+            // return "true" if the Player has..
+            return (
+                // ..Twisted Fates vision mark (R)..
+                this.Player.Buffs.Any(b => b.Name.Contains("Twisted"))
+                
+             // ..Nocturnes R (Fog part)..
+             || this.Player.Buffs.Any(b => b.Name.Contains("Nocturne"))
+            )
+            
+             //..and, if he has no protection..
+             && HasNoProtection()
+            
+            // ..and the relative option is enabled.
+            && this.Menu["use.cleansers.second.priority"].GetValue<MenuBool>().Value; 
+        }
+        
+        bool CanAndShouldCleanseIfIgnited()
+        {
+            // return "true" if..
+            return 
+                // ..the player is ignited..
+                this.Player.HasBuff("summonerdot")
+                
+            // ..and the relative option is enabled.
+            && this.Menu["use.cleansevsignite"].GetValue<MenuBool>().Value;
+        }
+        
         /// <summary>
         ///     Called when the game updates itself.
         /// </summary>
@@ -227,7 +255,6 @@ namespace NabbCleanser
                 if (ShouldUseCleanse() || CanAndShouldCleanseIfIgnited())
                 {
                     var IsCleanseReady = Player.Spellbook.CanUseSpell(cleanse) == SpellState.Ready;
-                    var HasZedTargetMark = this.Player.HasBuff("zedulttargetmark");
                     
                     // If the player actually has the summonerspell Cleanse and it is ready to use..
                     if (cleanse != SpellSlot.Unknown && IsCleanseReady)
@@ -240,6 +267,8 @@ namespace NabbCleanser
                 // If the player is being affected by Hard CC or a Second-priority ult mark..
                 if (ShouldUseCleanser() || ShouldUseSecondPriorityCleanser())
                 {
+                    var HasZedTargetMark = this.Player.HasBuff("zedulttargetmark");
+
                     // If the player is being affected by the DeathMark..
                     if (HasZedTargetMark)
                     
