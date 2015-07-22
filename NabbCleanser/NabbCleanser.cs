@@ -52,6 +52,19 @@
             Game.OnUpdate += Game_OnGameUpdate;
         }
         
+        bool HasNoProtection()
+        {
+            // return "true" if the Player..
+            return 
+                
+                //..has no SpellShield..
+                !ObjectManager.Player.HasBuffOfType(BuffType.SpellShield)
+                
+             //..nor SpellImmunity.  
+             && !ObjectManager.Player.HasBuffOfType(BuffType.SpellImmunity)
+            ; 
+        }
+        
         bool ShouldUseCleanse()
         {
             // return "true" if the Player is being affected by..
@@ -59,24 +72,31 @@
                 // ..Charms..
                 ObjectManager.Player.HasBuffOfType(BuffType.Charm)
                 
-             // ..Fears..
+             // ..or Fears..
              || ObjectManager.Player.HasBuffOfType(BuffType.Flee)
              
-             // ..Polymorphs..
+             // ..or Polymorphs..
              || ObjectManager.Player.HasBuffOfType(BuffType.Polymorph)
              
-             // ..Snares..
+             // ..or Snares..
              || ObjectManager.Player.HasBuffOfType(BuffType.Snare)
              
-             // ..Stuns..
+             // ..or Stuns..
              || ObjectManager.Player.HasBuffOfType(BuffType.Stun)
              
-             // ..Suppressions..
+             // ..or Suppressions..
              || ObjectManager.Player.HasBuffOfType(BuffType.Suppression)
              
-             // ..Taunts..
+             // ..or Taunts..
              || ObjectManager.Player.HasBuffOfType(BuffType.Taunt)
-            )
+             
+             // ..or Exhaust..
+             || ObjectManager.Player.HasBuff("summonerexhaust")
+             )
+            
+             //..and, if he has no protection..
+             && HasNoProtection()
+             
              // ..and the relative option is enabled.
              && Menu.Item("use.cleanse").GetValue<bool>()
             ; 
@@ -100,7 +120,14 @@
              
              // ..or Fizz's Fish Mark (R)..
              || ObjectManager.Player.HasBuff("FizzMarinerDoom")
-            )
+             
+             // ..or Malzahar's Ultimate..
+             || ObjectManager.Player.HasBuff("AlZaharNetherGrasp")
+             )
+             
+             //..and, if he has no protection..
+             && HasNoProtection()
+             
              // ..and the relative option is enabled.
              && Menu.Item("use.cleansers").GetValue<bool>()
             ; 
@@ -117,6 +144,10 @@
              // ..Nocturnes R (Fog part)..
              || ObjectManager.Player.HasBuff.StartsWith("Nocturne")
             )
+            
+             //..and, if he has no protection..
+             && HasNoProtection()
+            
              // ..and the relative option is enabled.
              && Menu.Item("use.cleansers.second.priority").GetValue<bool>()
             ; 
@@ -129,6 +160,9 @@
             return 
                 // ..the player is ignited..
                 ObjectManager.Player.HasBuff("summonerdot")
+                
+             // ..or the player has an invulnerability source..
+             && !ObjectManager.Player.HasBuffOfType(BuffType.Invulnerability)
                 
              // ..and the relative option is enabled.
              && Menu.Item("use.cleansevsignite").GetValue<bool>()
