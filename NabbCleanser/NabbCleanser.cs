@@ -181,7 +181,6 @@
                 if (ShouldUseCleanse() || CanAndShouldCleanseIfIgnited())
                 {
                     var IsCleanseReady = ObjectManager.Player.Spellbook.CanUseSpell(cleanse) == SpellState.Ready;
-                    var HasZedTargetMark = ObjectManager.Player.HasBuff("zedulttargetmark");
                     
                     // If the player actually has the summonerspell Cleanse and it is ready to use..
                     if (cleanse != SpellSlot.Unknown && IsCleanseReady)
@@ -194,6 +193,8 @@
                 // If the player is being affected by Hard CC or a Second-priority ult mark..
                 if (ShouldUseCleanser() /*|| ShouldUseSecondPriorityCleanser()*/)
                 {
+                    var HasZedTargetMark = ObjectManager.Player.HasBuff("zedulttargetmark");
+                    
                     // If the player is being affected by the DeathMark..
                     if (HasZedTargetMark)
                         
