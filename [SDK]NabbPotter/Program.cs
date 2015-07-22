@@ -60,8 +60,6 @@ namespace NabbPotter
         private static void OnLoad(object sender, EventArgs args)
         {
             new NabbPotter().Load();
-            Notifications.Add(Loaded);
-            DelayAction.Add(3000, ()=> Notifications.Remove(Loaded));
         }
     }
 }

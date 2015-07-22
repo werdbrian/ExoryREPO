@@ -60,8 +60,6 @@ namespace NabbCleanser
         private static void OnLoad(object sender, EventArgs args)
         {
             new NabbCleanser().Load();
-            Notifications.Add(Loaded);
-            DelayAction.Add(3000, ()=> Notifications.Remove(Loaded));
         }
     }
 }
