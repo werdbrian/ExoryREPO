@@ -33,11 +33,6 @@ namespace NabbTracker
     public class Program
     {
         /// <summary>
-        ///     The notification.
-        /// </summary>
-        private static Notification Loaded = new Notification("[SDK]NabbTracker", " - Loaded");
-        
-        /// <summary>
         ///     The main.
         /// </summary>
         /// <param name="args">

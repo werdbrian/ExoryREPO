@@ -33,11 +33,6 @@ namespace NabbCleanser
     public class Program
     {
         /// <summary>
-        ///     The notification.
-        /// </summary>
-        private static Notification Loaded = new Notification("[SDK]NabbCleanser", " - Loaded");
-        
-        /// <summary>
         ///     The main.
         /// </summary>
         /// <param name="args">
