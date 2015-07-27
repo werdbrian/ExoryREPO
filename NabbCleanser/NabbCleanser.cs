@@ -210,12 +210,11 @@
             if ((Menu.Item("panic_key_enable").GetValue<bool>() && Menu.Item("use.panic_key").GetValue<KeyBind>().Active) || (!Menu.Item("panic_key_enable").GetValue<bool>())){
             
                 cleanse = ObjectManager.Player.GetSpellSlot("summonerboost");
+				var IsCleanseReady = ObjectManager.Player.Spellbook.CanUseSpell(cleanse) == SpellState.Ready;
                 
                 // If you are being affected by movement-empairing or control-denying cctype or you are being affected by summoner Ignite..
                 if (ShouldUseCleanse() || CanAndShouldCleanseIfIgnited())
                 {
-                    var IsCleanseReady = ObjectManager.Player.Spellbook.CanUseSpell(cleanse) == SpellState.Ready;
-                    
                     // If the player actually has the summonerspell Cleanse and it is ready to use..
                     if (cleanse != SpellSlot.Unknown && IsCleanseReady)
                     
@@ -242,6 +241,13 @@
                         UseCleanser()
                     ;
                 }
+				
+				// If the player has not cleanse or cleanse is on cooldown and the player is being affected by hard CC..
+				if ((cleanse == SpellSlot.Unknown || !IsCleanseReady) && ShouldUseCleanse())
+				
+					// ..JUST (DO)CLEANSE IT!
+					UseCleanser()
+				;
             }
         }
     }
