@@ -1,7 +1,5 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MoonDraven.cs" company="ChewyMoon">
-//   Copyright (C) 2015 ChewyMoon
-//   
+// <copyright = "NabbHackeR - Exory @ LeagueSharp">
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
@@ -173,19 +171,18 @@ namespace NabbTracker
                     var GetSpell = TrackedChar.Spellbook.GetSpell(SpellSlots[Spell]);
                     var GetSpellCD = GetSpell.CooldownExpires - Game.Time;
                     var SpellCDString = string.Format("{0:0}", GetSpellCD);
-                    var IsSpellOnCD = GetSpellCD > 0;
                     var IsSpellNotLearned = TrackedChar.Spellbook.CanUseSpell(SpellSlots[Spell]) == SpellState.NotLearned;
                     
                     DisplayTextFont.DrawText(
                         null,
-                        IsSpellOnCD ?
+                        GetSpellCD > 0 ?
                         SpellCDString : SpellSlots[Spell].ToString(),
                         
                         X,
                         Y,
                         
-                        IsSpellNotLearned || IsSpellOnCD ?
-                        SharpDX.Color.Gray : SharpDX.Color.LightGreen
+						GetSpellCD <= 4 ?
+                        SharpDX.Color.Red : SharpDX.Color.LightGreen
                     );
                     
                     if (this.Menu["display.spell_levels"].GetValue<MenuBool>().Value){
@@ -213,7 +210,6 @@ namespace NabbTracker
                     var GetSummonerSpell = TrackedChar.Spellbook.GetSpell(SummonerSpellSlots[SummonerSpell]);
                     var GetSummonerSpellCD = GetSummonerSpell.CooldownExpires - Game.Time;
                     var SummonerSpellCDString = string.Format("{0:0}", GetSummonerSpellCD);
-                    var IsSummonerSpellOnCD = GetSummonerSpellCD > 0;
                     
                     switch (GetSummonerSpell.Name.ToLower())
                     {
@@ -235,13 +231,13 @@ namespace NabbTracker
                     
                     DisplayTextFont.DrawText(
                         null,
-                        IsSummonerSpellOnCD ? 
+                        GetSummonerSpellCD > 0 ? 
                         GetSummonerSpellName + ":" + SummonerSpellCDString : GetSummonerSpellName + ": UP ",
                         
                         SummonerSpellX,
                         SummonerSpellY,
                         
-                        IsSummonerSpellOnCD ?
+						GetSummonerSpellCD <= 4 ?
                         SharpDX.Color.Red : SharpDX.Color.Yellow
                     );
                 }
