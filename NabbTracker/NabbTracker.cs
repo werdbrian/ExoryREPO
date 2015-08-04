@@ -129,19 +129,18 @@
                     var GetSpell = PlayingCharacter.Spellbook.GetSpell(SpellSlots[Spell]);
                     var GetSpellCD = GetSpell.CooldownExpires - Game.Time;
                     var SpellCDString = string.Format("{0:0}", GetSpellCD);
-                    var IsSpellOnCD = GetSpellCD > 0;
                     var IsSpellNotLearned = PlayingCharacter.Spellbook.CanUseSpell(SpellSlots[Spell]) == SpellState.NotLearned;
                     
                     DisplayTextFont.DrawText(
                         null,
-                        IsSpellOnCD ?
+                        GetSpellCD > 0 ?
                         SpellCDString : SpellSlots[Spell].ToString(),
                         
                         X,
                         Y,
                         
-                        IsSpellNotLearned || IsSpellOnCD ?
-                        SharpDX.Color.Gray : SharpDX.Color.LightGreen
+					    GetSpellCD <= 4 ?
+                        SharpDX.Color.Red : SharpDX.Color.LightGreen
                     );
                     
                     if (Menu.Item("display.spell_levels").GetValue<bool>()){
@@ -169,7 +168,6 @@
                     var GetSummonerSpell = PlayingCharacter.Spellbook.GetSpell(SummonerSpellSlots[SummonerSpell]);
                     var GetSummonerSpellCD = GetSummonerSpell.CooldownExpires - Game.Time;
                     var SummonerSpellCDString = string.Format("{0:0}", GetSummonerSpellCD);
-                    var IsSummonerSpellOnCD = GetSummonerSpellCD > 0;
                     
                     switch (GetSummonerSpell.Name.ToLower())
                     {
@@ -191,13 +189,13 @@
                     
                     DisplayTextFont.DrawText(
                         null,
-                        IsSummonerSpellOnCD ? 
+                        GetSummonerSpellCD > 0 ? 
                         GetSummonerSpellName + ":" + SummonerSpellCDString : GetSummonerSpellName + ": UP ",
                         
                         SummonerSpellX,
                         SummonerSpellY,
                         
-                        IsSummonerSpellOnCD ?
+                        GetSummonerSpellCD <= 4 ?
                         SharpDX.Color.Red : SharpDX.Color.Yellow
                     );
                 }
