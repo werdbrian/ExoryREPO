@@ -1,4 +1,4 @@
-﻿namespace NabbCondemn
+﻿namespace NabbCondemner
 {    
     using System;
     using System.Collections.Generic;
@@ -15,7 +15,7 @@
     /// <summary>
     ///     The main class.
     /// </summary>
-    class Condemn
+    class Condemner
     {
         public static Menu Menu;
         

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using LeagueSharp;
 using LeagueSharp.Common;
 
-namespace NabbCondemn
+namespace NabbCondemner
 {
     class Program
     {
@@ -18,7 +18,7 @@ namespace NabbCondemn
 
         private static void Game_OnLoad(EventArgs args)
         {
-            Condemn.OnLoad();
+            Condemner.OnLoad();
         }
     }
 }
