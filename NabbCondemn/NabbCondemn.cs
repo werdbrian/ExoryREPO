@@ -23,7 +23,7 @@
         
 
         /// <summary>
-        /// Method Called when the Assembly is loaded.
+        ///    Called when the Assembly is loaded.
         /// </summary>
         public static void OnLoad()
         {
@@ -39,7 +39,7 @@
         }
         
         /// <summary>
-        ///        The menu.
+        ///    The menu.
         /// </summary>
         private static void LoadMenu()        
         {
@@ -53,7 +53,7 @@
         }
         
         /// <summary>
-        ///     Called when the game updates itself.
+        ///    Called when the game updates itself.
         /// </summary>
         /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
         private static void Game_OnGameUpdate(EventArgs args)

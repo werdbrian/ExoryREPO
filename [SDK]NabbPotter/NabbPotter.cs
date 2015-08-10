@@ -1,7 +1,5 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MoonDraven.cs" company="ChewyMoon">
-//   Copyright (C) 2015 ChewyMoon
-//   
+﻿// -------------------------------------------------------------------------------------------------------------------- 
+// <copyright>
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
