@@ -139,8 +139,9 @@
                         X,
                         Y,
                         
-					    GetSpellCD <= 4 ?
-                        SharpDX.Color.Red : SharpDX.Color.LightGreen
+					    IsSpellNotLearned ?
+                        SharpDX.Color.Gray : GetSpellCD > 4 ? 
+						SharpDX.Color.Red : SharpDX.Color.LightGreen
                     );
                     
                     if (Menu.Item("display.spell_levels").GetValue<bool>()){
@@ -195,7 +196,7 @@
                         SummonerSpellX,
                         SummonerSpellY,
                         
-                        GetSummonerSpellCD <= 4 ?
+                        GetSummonerSpellCD > 4 ?
                         SharpDX.Color.Red : SharpDX.Color.Yellow
                     );
                 }
