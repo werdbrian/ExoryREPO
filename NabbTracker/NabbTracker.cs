@@ -130,6 +130,7 @@
                     var GetSpellCD = GetSpell.CooldownExpires - Game.Time;
                     var SpellCDString = string.Format("{0:0}", GetSpellCD);
                     var IsSpellNotLearned = PlayingCharacter.Spellbook.CanUseSpell(SpellSlots[Spell]) == SpellState.NotLearned;
+					var IsSpellReady = PlayingCharacter.Spellbook.CanUseSpell(SpellSlots[Spell]) == SpellState.Ready;
                     
                     DisplayTextFont.DrawText(
                         null,
@@ -139,8 +140,16 @@
                         X,
                         Y,
                         
-					    IsSpellNotLearned ?
-                        SharpDX.Color.Gray : GetSpellCD > 4 ? 
+						// Grey color if the spell is not learned or not ready to use.
+					    IsSpellNotLearned || !IsSpellReady ?
+                        SharpDX.Color.Gray :
+						
+						// Blue color if the target has not enough mana to use the spell.
+						GetSpell.ManaCost > PlayingCharacter.Mana ?
+                        SharpDX.Color.Blue :
+
+						// Red color if the Spell CD is <= 4 (almost up), else green.
+						GetSpellCD > 0 && GetSpellCD <= 4 ? 
 						SharpDX.Color.Red : SharpDX.Color.LightGreen
                     );
                     
@@ -196,7 +205,7 @@
                         SummonerSpellX,
                         SummonerSpellY,
                         
-                        GetSummonerSpellCD > 4 ?
+                        GetSummonerSpellCD > 0 ?
                         SharpDX.Color.Red : SharpDX.Color.Yellow
                     );
                 }
