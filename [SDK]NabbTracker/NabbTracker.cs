@@ -172,6 +172,7 @@ namespace NabbTracker
                     var GetSpellCD = GetSpell.CooldownExpires - Game.Time;
                     var SpellCDString = string.Format("{0:0}", GetSpellCD);
                     var IsSpellNotLearned = TrackedChar.Spellbook.CanUseSpell(SpellSlots[Spell]) == SpellState.NotLearned;
+                    var IsSpellReady = TrackedChar.Spellbook.CanUseSpell(SpellSlots[Spell]) == SpellState.Ready;
                     
                     DisplayTextFont.DrawText(
                         null,
@@ -181,8 +182,17 @@ namespace NabbTracker
                         X,
                         Y,
                         
-						GetSpellCD <= 4 ?
-                        SharpDX.Color.Red : SharpDX.Color.LightGreen
+						// Grey color if the spell is not learned or not ready to use.
+					    IsSpellNotLearned || !IsSpellReady ?
+                        SharpDX.Color.Gray :
+						
+						// Blue color if the target has not enough mana to use the spell.
+						GetSpell.ManaCost > TrackedChar.Mana ?
+                        SharpDX.Color.Blue :
+
+						// Red color if the Spell CD is <= 4 (almost up), else green.
+						GetSpellCD > 0 && GetSpellCD <= 4 ? 
+						SharpDX.Color.Red : SharpDX.Color.LightGreen
                     );
                     
                     if (this.Menu["display.spell_levels"].GetValue<MenuBool>().Value){
@@ -237,7 +247,7 @@ namespace NabbTracker
                         SummonerSpellX,
                         SummonerSpellY,
                         
-						GetSummonerSpellCD <= 4 ?
+                        GetSummonerSpellCD > 0 ?
                         SharpDX.Color.Red : SharpDX.Color.Yellow
                     );
                 }
