@@ -182,20 +182,58 @@ namespace NabbTracker
 					
 					switch (GetSummonerSpell.Name.ToLower())
 					{
-						case "summonerflash":		   GetSummonerSpellName = "Flash";		   break;
-						case "summonerdot":			 GetSummonerSpellName = "Ignite";		  break;
-						case "summonerheal":			GetSummonerSpellName = "Heal";			break;
-						case "summonerteleport":		GetSummonerSpellName = "Teleport";		break;
-						case "summonerexhaust":		 GetSummonerSpellName = "Exhaust";		 break;
-						case "summonerhaste":		   GetSummonerSpellName = "Ghost";		   break;
-						case "summonerbarrier":		 GetSummonerSpellName = "Barrier";		 break;
-						case "summonerboost":		   GetSummonerSpellName = "Cleanse";		 break;
-						case "summonermana":			GetSummonerSpellName = "Clarity";		 break;
-						case "summonerclairvoyance":	GetSummonerSpellName = "Clairvoyance";	break;
-						case "summonerodingarrison":	GetSummonerSpellName = "Garrison";		break;
-						case "summonersnowball":		GetSummonerSpellName = "Mark";			break; // ARAM Only
-						// 
-						default:						GetSummonerSpellName = "Smite";		   break;
+						case "summonerflash":	
+							GetSummonerSpellName = "Flash";
+							break;
+							
+						case "summonerdot":
+							GetSummonerSpellName = "Ignite";
+							break;
+						
+						case "summonerheal":
+							GetSummonerSpellName = "Heal";
+							break;
+						
+						case "summonerteleport":
+							GetSummonerSpellName = "Teleport";
+							break;
+						
+						case "summonerexhaust":
+							GetSummonerSpellName = "Exhaust";
+							break;
+						
+						case "summonerhaste":
+							GetSummonerSpellName = "Ghost";
+							break;
+						
+						case "summonerbarrier":
+							GetSummonerSpellName = "Barrier";
+							break;
+						
+						case "summonerboost":
+							GetSummonerSpellName = "Cleanse";
+							break;
+						
+						case "summonermana":
+							GetSummonerSpellName = "Clarity";
+							break;
+						
+						case "summonerclairvoyance":
+							GetSummonerSpellName = "Clairvoyance";
+							break;
+						
+						case "summonerodingarrison":
+							GetSummonerSpellName = "Garrison";
+							break;
+						
+						case "summonersnowball":
+							GetSummonerSpellName = "Mark";
+							break;
+						
+						default:
+							GetSummonerSpellName = "Smite";
+							break
+						;
 					}
 					
 					DisplayTextFont.DrawText(
