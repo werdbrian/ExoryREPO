@@ -217,19 +217,35 @@
                 {
                     // If the player actually has the summonerspell Cleanse and it is ready to use..
                     if (cleanse != SpellSlot.Unknown && IsCleanseReady)
+					{
+						//CATLAZY ASUNA PLS HELP
+						var HasSkarnerUltimate = 
+							ObjectManager.Player.HasBuffOfType(BuffType.Suppression) &&
+							ObjectManager.Player.Buffs.Any(b => b.Name.Contains("Skarner"))
+						;
+						
+						// If the player is being affected by Skarner's R..
+						if (HasSkarnerUltimate)
+                        
+							// ..Cleanse it, but delay the action by 1,5 seconds.
+							Utility.DelayAction.Add(1500, () => ObjectManager.Player.Spellbook.CastSpell(cleanse, ObjectManager.Player));
+						
+						// ..else..
+						else
                     
-                        // ..JUST (DO)CLEANSE IT!
-                        ObjectManager.Player.Spellbook.CastSpell(cleanse, ObjectManager.Player)
-                    ;
+							// ..JUST (DO)CLEANSE IT!
+							ObjectManager.Player.Spellbook.CastSpell(cleanse, ObjectManager.Player)
+						;
+					}	
                 }
                 
                 // If the player is being affected by Hard CC or a Second-priority ult mark..
                 if (ShouldUseCleanser() /*|| ShouldUseSecondPriorityCleanser()*/)
                 {
-                    var HasZedTargetMark = ObjectManager.Player.HasBuff("zedulttargetmark");
+                    var HasZedUltimate = ObjectManager.Player.HasBuff("zedulttargetmark");
                     
                     // If the player is being affected by the DeathMark..
-                    if (HasZedTargetMark)
+                    if (HasZedUltimate)
                         
                         // ..Cleanse it, but delay the action by 4 seconds.
                         Utility.DelayAction.Add(4000, () => UseCleanser());
