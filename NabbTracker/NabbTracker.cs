@@ -131,7 +131,6 @@ namespace NabbTracker
                     var SpellCDString = string.Format("{0:0}", GetSpellCD);
                     var IsSpellNotLearned = PlayingCharacter.Spellbook.CanUseSpell(SpellSlots[Spell]) == SpellState.NotLearned;
                     var IsSpellNoMana = PlayingCharacter.Spellbook.CanUseSpell(SpellSlots[Spell]) == SpellState.NoMana;
-                    var IsSpellSurpressed = PlayingCharacter.Spellbook.CanUseSpell(SpellSlots[Spell]) == SpellState.Surpressed;
                     
                     DisplayTextFont.DrawText(
                         null,
@@ -142,7 +141,7 @@ namespace NabbTracker
                         Y,
                         
                         // Grey color if the spell is not learned or not ready to use.
-                        IsSpellNotLearned || IsSpellSurpressed ?
+                        IsSpellNotLearned ?
                         SharpDX.Color.Gray :
                         
                         // Blue color if the target has not enough mana to use the spell.
