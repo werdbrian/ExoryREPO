@@ -184,8 +184,8 @@ namespace NabbTracker
                         X,
                         Y,
                         
-                        // Show Grey color if the spell is not learned or not ready to use.
-                        IsSpellNotLearned || IsSpellSurpressed ?
+                        // Show Grey color if the spell is not learned or surpressed.
+                        IsSpellNotLearned ?
                         SharpDX.Color.Gray :
                         
                         // Blue color if the target has not enough mana to use the spell.
