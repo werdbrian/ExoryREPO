@@ -115,7 +115,7 @@ namespace NabbTracker
             if (!Menu.Item("enable").GetValue<bool>()) return;
             
             foreach (var PlayingCharacter in HeroManager.AllHeroes.Where(PlayingCharacter => (PlayingCharacter.IsValid)
-                //&& (!PlayingCharacter.IsMe)
+                && (!PlayingCharacter.IsMe)
                 && (PlayingCharacter != null)
                 && (PlayingCharacter.IsHPBarRendered)
                 && ((PlayingCharacter.IsEnemy && Menu.Item("display.enemies").GetValue<bool>()) 
