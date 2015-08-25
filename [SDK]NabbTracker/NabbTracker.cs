@@ -173,7 +173,6 @@ namespace NabbTracker
                     var SpellCDString = string.Format("{0:0}", GetSpellCD);
                     
                     var IsSpellNotLearned = TrackedChar.Spellbook.CanUseSpell(SpellSlots[Spell]) == SpellState.NotLearned;
-                    var IsSpellSurpressed = TrackedChar.Spellbook.CanUseSpell(SpellSlots[Spell]) == SpellState.Surpressed;
                     var IsSpellNoMana = TrackedChar.Spellbook.CanUseSpell(SpellSlots[Spell]) == SpellState.NoMana;
                     
                     DisplayTextFont.DrawText(

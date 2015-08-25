@@ -130,9 +130,7 @@ namespace NabbTracker
                     var GetSpellCD = GetSpell.CooldownExpires - Game.Time;
                     var SpellCDString = string.Format("{0:0}", GetSpellCD);
                     var IsSpellNotLearned = PlayingCharacter.Spellbook.CanUseSpell(SpellSlots[Spell]) == SpellState.NotLearned;
-                    var IsSpellSurpressed = PlayingCharacter.Spellbook.CanUseSpell(SpellSlots[Spell]) == SpellState.Surpressed;
                     var IsSpellNoMana = PlayingCharacter.Spellbook.CanUseSpell(SpellSlots[Spell]) == SpellState.NoMana;
-					var IsSpellReady = PlayingCharacter.Spellbook.CanUseSpell(SpellSlots[Spell]) == SpellState.Ready;
                     
                     DisplayTextFont.DrawText(
                         null,
