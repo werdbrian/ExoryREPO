@@ -60,7 +60,7 @@ namespace NabbTracker
         /// <summary>
         ///     The Text fcnt.
         /// </summary>
-        Font DisplayTextFont = new Font(Drawing.Direct3DDevice, new System.Drawing.Font("Tahoma", 10));
+        Font DisplayTextFont = new Font(Drawing.Direct3DDevice, new System.Drawing.Font("Tahoma", 8));
         
         /// <summary>
         ///     The SpellLevel Text font.
@@ -115,7 +115,7 @@ namespace NabbTracker
             if (!Menu.Item("enable").GetValue<bool>()) return;
             
             foreach (var PlayingCharacter in HeroManager.AllHeroes.Where(PlayingCharacter => (PlayingCharacter.IsValid)
-                && (!PlayingCharacter.IsMe)
+                //&& (!PlayingCharacter.IsMe)
                 && (PlayingCharacter != null)
                 && (PlayingCharacter.IsHPBarRendered)
                 && ((PlayingCharacter.IsEnemy && Menu.Item("display.enemies").GetValue<bool>()) 
@@ -123,13 +123,14 @@ namespace NabbTracker
                 ){
                 
                 for (int Spell = 0; Spell < SpellSlots.Count(); Spell++){
-                    X = (int)PlayingCharacter.HPBarPosition.X + 10 + (Spell * 22);
-                    Y = (int)PlayingCharacter.HPBarPosition.Y + 32;
+                    X = (int)PlayingCharacter.HPBarPosition.X + 10 + (Spell * 25);
+                    Y = (int)PlayingCharacter.HPBarPosition.Y + 35;
     
                     var GetSpell = PlayingCharacter.Spellbook.GetSpell(SpellSlots[Spell]);
                     var GetSpellCD = GetSpell.CooldownExpires - Game.Time;
                     var SpellCDString = string.Format("{0:0}", GetSpellCD);
                     var IsSpellNotLearned = PlayingCharacter.Spellbook.CanUseSpell(SpellSlots[Spell]) == SpellState.NotLearned;
+                    var IsSpellSurpressed = PlayingCharacter.Spellbook.CanUseSpell(SpellSlots[Spell]) == SpellState.Surpressed;
                     var IsSpellNoMana = PlayingCharacter.Spellbook.CanUseSpell(SpellSlots[Spell]) == SpellState.NoMana;
                     
                     DisplayTextFont.DrawText(
@@ -140,24 +141,28 @@ namespace NabbTracker
                         X,
                         Y,
                         
-                        // Grey color if the spell is not learned or not ready to use.
-                        IsSpellNotLearned ?
+                        // Show Grey color if the spell is not learned or not ready to use.
+                        IsSpellNotLearned || IsSpellSurpressed ?
                         SharpDX.Color.Gray :
                         
                         // Blue color if the target has not enough mana to use the spell.
                         IsSpellNoMana ?
-                        SharpDX.Color.Blue :
+                        SharpDX.Color.Cyan :
 
-                        // Red color if the Spell CD is <= 4 (almost up), else green.
+                        // Red color if the Spell CD is <= 4 (almost up),
                         GetSpellCD > 0 && GetSpellCD <= 4 ? 
-                        SharpDX.Color.Red : SharpDX.Color.LightGreen
+                        SharpDX.Color.Red : 
+                        
+                        // Yellow color if the Spell is on CD, else show Grenn
+                        GetSpellCD > 0 ?
+                        SharpDX.Color.Yellow : SharpDX.Color.LightGreen
                     );
                     
                     if (Menu.Item("display.spell_levels").GetValue<bool>()){
                     
                         for (int DrawSpellLevel = 0; DrawSpellLevel <= GetSpell.Level - 1; DrawSpellLevel++){
-                            SpellLevelX = X + (DrawSpellLevel * 3);
-                            SpellLevelY = Y + 5;
+                            SpellLevelX = X + (DrawSpellLevel * 3) - 4;
+                            SpellLevelY = Y;
                             
                             DisplayLevelFont.DrawText(
                                 null,
@@ -173,7 +178,7 @@ namespace NabbTracker
                 for (int SummonerSpell = 0; SummonerSpell < SummonerSpellSlots.Count(); SummonerSpell++)
                 {
                     SummonerSpellX = (int)PlayingCharacter.HPBarPosition.X + 10 + (SummonerSpell * 88);
-                    SummonerSpellY = (int)PlayingCharacter.HPBarPosition.Y - 2;
+                    SummonerSpellY = (int)PlayingCharacter.HPBarPosition.Y + 4;
                     
                     var GetSummonerSpell = PlayingCharacter.Spellbook.GetSpell(SummonerSpellSlots[SummonerSpell]);
                     var GetSummonerSpellCD = GetSummonerSpell.CooldownExpires - Game.Time;
