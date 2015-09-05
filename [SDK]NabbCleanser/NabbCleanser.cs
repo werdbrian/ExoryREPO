@@ -237,6 +237,78 @@ namespace NabbCleanser
             && this.Menu["use.cleansevsignite"].GetValue<MenuBool>().Value;
         }
         
+        bool ShouldUseMikaels(Obj_AI_Hero target)
+        {
+            // return "true" if the Player is being affected by..
+            return (
+                // ..Charms..
+                target.HasBuffOfType(BuffType.Charm)
+                
+             // ..or Fears..
+             || target.HasBuffOfType(BuffType.Flee)
+             
+             // ..or Polymorphs..
+             || target.HasBuffOfType(BuffType.Polymorph)
+             
+             // ..or Snares..
+             || target.HasBuffOfType(BuffType.Snare)
+             
+             // ..or Stuns..
+             || target.HasBuffOfType(BuffType.Stun)
+             
+             // ..or Suppressions..
+             || target.HasBuffOfType(BuffType.Suppression)
+             
+             // ..or Taunts..
+             || target.HasBuffOfType(BuffType.Taunt)
+             
+             // ..or Exhaust..
+             || target.HasBuff("summonerexhaust")
+             
+             // ..or Zed's Target Mark (R)..
+             || target.HasBuff("zedulttargetmark")
+
+             // ..or Vladimir's Mark (R)..
+             || target.HasBuff("VladimirHemoplague")
+             
+             // ..or Mordekaiser's Mark (R)..
+             || target.HasBuff("MordekaiserChildrenOfTheGrave")
+             
+             // ..or Poppy's Immunity Mark (R)..
+             || target.HasBuff("PoppyDiplomaticImmunity")
+             
+             // ..or Fizz's Fish Mark (R)..
+             || target.HasBuff("FizzMarinerDoom")
+             
+             // ..or Malzahar's Ultimate..
+             || target.HasBuff("AlZaharNetherGrasp")
+             )
+             
+             //..and, if he has no protection..
+             && HasNoProtection()
+             
+             // ..and the relative option is enabled.
+             && this.Menu["enable.mikaels"].GetValue<MenuBool>().Value
+            ;
+        }
+
+        public void BuildMikaelsMenu(Menu Menu)
+        {            
+            var MikaelsMenu = new Menu("use.mikaelsmenu", "Mikaels Options", true);
+            {
+                foreach (var ally in ObjectManager.Get<Obj_AI_Hero>()
+                    .Where(h => h.IsAlly)
+                    .Select(hero => hero.ChampionName)
+                    .ToList()){
+                    
+                    MikaelsMenu.Add(new MenuBool(string.Format("use.mikaels.{0}", ally.ToLowerInvariant()), ally, true));
+                }
+            }
+            MikaelsMenu.Add(new MenuBool("enable.mikaels", "Enable Mikaels Usage", true));
+
+            this.Menu.Attach();
+        }
+        
         /// <summary>
         ///     Called when the game updates itself.
         /// </summary>
@@ -246,19 +318,48 @@ namespace NabbCleanser
             // If the only-cleanse-if-key-pressed option is enabled and the relative key is being pressed or the only-cleanse-if-key-pressed option is disabled..
             if ((this.Menu["panic_key_enable"].GetValue<MenuBool>().Value && this.Menu["use.panic_key"].GetValue<MenuKeyBind>().Active) || (!this.Menu["panic_key_enable"].GetValue<MenuBool>().Value)){
             
-                cleanse = Player.GetSpellSlot("summonerboost");
+                cleanse = this.Player.GetSpellSlot("summonerboost");
                 var CleanseDelay = this.Menu["use.delay"].GetValue<MenuSlider>().Value;
-                var IsCleanseReady = Player.Spellbook.CanUseSpell(cleanse) == SpellState.Ready;
+                var IsCleanseReady = this.Player.Spellbook.CanUseSpell(cleanse) == SpellState.Ready;
+                
+                // For each ally enabled on the menu-option..
+                foreach (var ally in ObjectManager.Get<Obj_AI_Hero>()
+                    .Where(h => h.IsAlly
+                        && this.Menu[string.Format("use.mikaels.{0}", h.ChampionName.ToLowerInvariant())].GetValue<MenuBool>().Value
+                        /*&& this.Player.CountAlliesInRange(500) > 0*/)
+                    ){
+
+                    // if the player has Mikaels and is able to use it..
+                    if (Items.HasItem(Mikaels) && Items.CanUseItem(Mikaels))
+                    {
+                        // If the ally should be cleansed..
+                        if (ShouldUseMikaels(ally))
+                        {
+                            // ..JUST (DO)CLEANSE HIM!
+                            Items.UseItem(Mikaels, ally);
+                        }
+                    }
+                }
                 
                 // If you are being affected by movement-empairing or control-denying cctype or you are being affected by summoner Ignite..
                 if (ShouldUseCleanse() || CanAndShouldCleanseIfIgnited())
-                {   
+                {
                     // If the player actually has the summonerspell Cleanse and it is ready to use..
                     if (cleanse != SpellSlot.Unknown && IsCleanseReady)
+                    {
+                        var HasSkarnerUltimate = this.Player.HasBuff("SkarnerR");
+                        
+                        // If the player is being affected by Skarner's R..
+                        if (HasSkarnerUltimate)
+                        {
+                            // ..Use the normal delay.
+                            DelayAction.Add(CleanseDelay, () => this.Player.Spellbook.CastSpell(cleanse, this.Player));
+                            return;
+                        }
                     
-                        // ..Use the normal delay.
-                        DelayAction.Add(CleanseDelay, () => Player.Spellbook.CastSpell(cleanse, Player))
-                    ;
+                        // ..JUST (DO)CLEANSE IT!
+                        this.Player.Spellbook.CastSpell(cleanse, this.Player);
+                    }    
                 }
                 
                 // If the player is being affected by Hard CC or a Second-priority ult mark..
@@ -268,24 +369,32 @@ namespace NabbCleanser
 
                     // If the player is being affected by the DeathMark..
                     if (HasZedTargetMark)
-                    
+                    {
                         // ..Double the delay before cleansing..
                         DelayAction.Add(CleanseDelay*2, () => UseCleanser());
-                        
-                    //..else..
-                    else
-                    
-                        // ..JUST (DO)CLEANSE IT!
-                        DelayAction.Add(CleanseDelay, () => UseCleanser())
-                    ;
+                        return;
+                    }
+                }
+
+                // if the player has Mikaels and is able to use it..
+                if (Items.HasItem(Mikaels) && Items.CanUseItem(Mikaels))
+                {
+                    if (ShouldUseCleanser() /*&& this.Player.CountAlliesInRange(500) == 0*/)
+                    {
+                        Items.UseItem(Mikaels);
+                        return;
+                    }
+
+                    // ..JUST (DO)CLEANSE IT!
+                    UseCleanser();
                 }
                 
                 // If the player has not cleanse or cleanse is on cooldown and the player is being affected by hard CC..
                 if ((cleanse == SpellSlot.Unknown || !IsCleanseReady) && ShouldUseCleanse())
-                
+                {
                     // ..JUST (DO)CLEANSE IT!
-                    UseCleanser()
-                ;
+                    UseCleanser();
+                }
             }    
         }
     }

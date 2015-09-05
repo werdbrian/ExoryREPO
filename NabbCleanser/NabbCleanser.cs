@@ -49,8 +49,8 @@ namespace NabbCleanser
             }
             Menu.AddItem(new MenuItem("enable", "Enable").SetValue(true));
 
-			BuildMikaelsMenu(Menu);
-			
+            BuildMikaelsMenu(Menu);
+            
             Game.OnUpdate += Game_OnGameUpdate;
         }
         
@@ -135,11 +135,11 @@ namespace NabbCleanser
             ; 
         }
         
-		bool ShouldUseMikaels(Obj_AI_Hero target)
-		{
+        bool ShouldUseMikaels(Obj_AI_Hero target)
+        {
             // return "true" if the Player is being affected by..
             return (
-				  // ..Charms..
+                // ..Charms..
                 target.HasBuffOfType(BuffType.Charm)
                 
              // ..or Fears..
@@ -162,7 +162,7 @@ namespace NabbCleanser
              
              // ..or Exhaust..
              || target.HasBuff("summonerexhaust")
-			 
+             
              // ..or Zed's Target Mark (R)..
              || target.HasBuff("zedulttargetmark")
 
@@ -204,20 +204,20 @@ namespace NabbCleanser
              && Menu.Item("use.cleansevsignite").GetValue<bool>()
             ;
         }
-		
-		public void BuildMikaelsMenu(Menu Menu)
+        
+        public void BuildMikaelsMenu(Menu Menu)
         {            
             var MikaelsMenu = new Menu("Mikaels Options", "use.mikaelsmenu");
             {
                 foreach (var ally in ObjectManager.Get<Obj_AI_Hero>()
-					.Where(h => h.IsAlly)
-					.Select(hero => hero.ChampionName)
-					.ToList()){
-					
+                    .Where(h => h.IsAlly)
+                    .Select(hero => hero.ChampionName)
+                    .ToList()){
+                    
                     MikaelsMenu.AddItem(new MenuItem(string.Format("use.mikaels.{0}", ally.ToLowerInvariant()), ally).SetValue(true));
                 }
             }
-			MikaelsMenu.AddItem(new MenuItem("enable.mikaels", "Enable Mikaels Usage").SetValue(true));
+            MikaelsMenu.AddItem(new MenuItem("enable.mikaels", "Enable Mikaels Usage").SetValue(true));
 
             Menu.AddSubMenu(MikaelsMenu);
         }
@@ -256,56 +256,56 @@ namespace NabbCleanser
         /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
         private void Game_OnGameUpdate(EventArgs args)
         {
-			// Don't use the assembly if the player is dead.
+            // Don't use the assembly if the player is dead.
             if (ObjectManager.Player.IsDead) return;
-			
+            
             // Don't use the assembly if the relative option is not enabled.
             if (!Menu.Item("enable").GetValue<bool>()) return;
             
             // If the only-cleanse-if-key-pressed option is enabled and the relative key is being pressed or the only-cleanse-if-key-pressed option is disabled..
             if ((Menu.Item("panic_key_enable").GetValue<bool>() && Menu.Item("use.panic_key").GetValue<KeyBind>().Active) || (!Menu.Item("panic_key_enable").GetValue<bool>())){
-				
+                
                 cleanse = ObjectManager.Player.GetSpellSlot("summonerboost");
                 var IsCleanseReady = ObjectManager.Player.Spellbook.CanUseSpell(cleanse) == SpellState.Ready;
 
-				// For each ally enabled on the menu-option..
-				foreach (var ally in ObjectManager.Get<Obj_AI_Hero>()
-					.Where(h => h.IsAlly
-						&& Menu.Item(string.Format("use.mikaels.{0}", h.ChampionName.ToLowerInvariant())).GetValue<bool>()
-						&& ObjectManager.Player.CountAlliesInRange(500) > 0)
-					){
+                // For each ally enabled on the menu-option..
+                foreach (var ally in ObjectManager.Get<Obj_AI_Hero>()
+                    .Where(h => h.IsAlly
+                        && Menu.Item(string.Format("use.mikaels.{0}", h.ChampionName.ToLowerInvariant())).GetValue<bool>()
+                        && ObjectManager.Player.CountAlliesInRange(500) > 0)
+                    ){
 
-					// if the player has Mikaels and is able to use it..
-					if (Items.HasItem(Mikaels) && Items.CanUseItem(Mikaels))
-					{
-						// If the ally should be cleansed..
-						if (ShouldUseMikaels(ally))
-						{
-							// ..JUST (DO)CLEANSE HIM!
-							Items.UseItem(Mikaels, ally);
-						}
-					}
-				}
-				
+                    // if the player has Mikaels and is able to use it..
+                    if (Items.HasItem(Mikaels) && Items.CanUseItem(Mikaels))
+                    {
+                        // If the ally should be cleansed..
+                        if (ShouldUseMikaels(ally))
+                        {
+                            // ..JUST (DO)CLEANSE HIM!
+                            Items.UseItem(Mikaels, ally);
+                        }
+                    }
+                }
+                
                 // If you are being affected by movement-empairing or control-denying cctype or you are being affected by summoner Ignite..
                 if (ShouldUseCleanse() || CanAndShouldCleanseIfIgnited())
                 {
                     // If the player actually has the summonerspell Cleanse and it is ready to use..
                     if (cleanse != SpellSlot.Unknown && IsCleanseReady)
-					{
-						var HasSkarnerUltimate = ObjectManager.Player.HasBuff("SkarnerR");
-						
-						// If the player is being affected by Skarner's R..
-						if (HasSkarnerUltimate){
+                    {
+                        var HasSkarnerUltimate = ObjectManager.Player.HasBuff("SkarnerR");
                         
-							// ..Cleanse it, but delay the action by 1,5 seconds.
-							Utility.DelayAction.Add(750, () => ObjectManager.Player.Spellbook.CastSpell(cleanse, ObjectManager.Player));
-							return;
-						}
+                        // If the player is being affected by Skarner's R..
+                        if (HasSkarnerUltimate){
+                        
+                            // ..Cleanse it, but delay the action by 1,5 seconds.
+                            Utility.DelayAction.Add(750, () => ObjectManager.Player.Spellbook.CastSpell(cleanse, ObjectManager.Player));
+                            return;
+                        }
                     
-						// ..JUST (DO)CLEANSE IT!
-						ObjectManager.Player.Spellbook.CastSpell(cleanse, ObjectManager.Player);
-					}	
+                        // ..JUST (DO)CLEANSE IT!
+                        ObjectManager.Player.Spellbook.CastSpell(cleanse, ObjectManager.Player);
+                    }    
                 }
                 
                 // If the player is being affected by Hard CC or a Second-priority ult mark..
@@ -318,18 +318,18 @@ namespace NabbCleanser
                     { 
                         // ..Cleanse it, but delay the action by 4 seconds.
                         Utility.DelayAction.Add(3000, () => UseCleanser());
-						return;
+                        return;
                     }
 
-					// if the player has Mikaels and is able to use it..
-					if (Items.HasItem(Mikaels) && Items.CanUseItem(Mikaels))
-					{
-						if (ShouldUseCleanser() && ObjectManager.Player.CountAlliesInRange(500) == 0)
-						{
-							Items.UseItem(Mikaels);
-							return;
-						}
-					}
+                    // if the player has Mikaels and is able to use it..
+                    if (Items.HasItem(Mikaels) && Items.CanUseItem(Mikaels))
+                    {
+                        if (ShouldUseCleanser() && ObjectManager.Player.CountAlliesInRange(500) == 0)
+                        {
+                            Items.UseItem(Mikaels);
+                            return;
+                        }
+                    }
 
                     // ..JUST (DO)CLEANSE IT!
                     UseCleanser();
@@ -340,8 +340,8 @@ namespace NabbCleanser
                 {
                     // ..JUST (DO)CLEANSE IT!
                     UseCleanser();
-				}
-			}
+                }
+            }
         }
     }
 }
