@@ -114,23 +114,21 @@ namespace NabbTracker
         {
             if (!Menu.Item("enable").GetValue<bool>()) return;
             
-            foreach (var PlayingCharacter in HeroManager.AllHeroes.Where(PlayingCharacter => (PlayingCharacter.IsValid)
-                && (!PlayingCharacter.IsMe)
-                && (PlayingCharacter != null)
-                && (PlayingCharacter.IsHPBarRendered)
-                && ((PlayingCharacter.IsEnemy && Menu.Item("display.enemies").GetValue<bool>()) 
-                    || (PlayingCharacter.IsAlly && Menu.Item("display.allies").GetValue<bool>())))
-                ){
-                
+            foreach (var PlayingCharacter in ObjectManager.Get<Obj_AI_Hero>()
+                .Where(pg => pg.IsValid
+                    && !pg.IsMe
+                    && pg.IsHPBarRendered
+                    && (pg.IsEnemy && Menu.Item("display.enemies").GetValue<bool>() ||
+                        pg.IsAlly && Menu.Item("display.allies").GetValue<bool>())))
+            {
                 for (int Spell = 0; Spell < SpellSlots.Count(); Spell++){
                     X = (int)PlayingCharacter.HPBarPosition.X + 10 + (Spell * 25);
                     Y = (int)PlayingCharacter.HPBarPosition.Y + 35;
     
                     var GetSpell = PlayingCharacter.Spellbook.GetSpell(SpellSlots[Spell]);
-                    var GetSpellCD = GetSpell.CooldownExpires - Game.Time;
+					var GetSpellCD = GetSpell.CooldownExpires - Game.Time;
                     var SpellCDString = string.Format("{0:0}", GetSpellCD);
                     var IsSpellNotLearned = PlayingCharacter.Spellbook.CanUseSpell(SpellSlots[Spell]) == SpellState.NotLearned;
-                    var IsSpellNoMana = PlayingCharacter.Spellbook.CanUseSpell(SpellSlots[Spell]) == SpellState.NoMana;
                     
                     DisplayTextFont.DrawText(
                         null,
@@ -140,12 +138,12 @@ namespace NabbTracker
                         X,
                         Y,
                         
-                        // Show Grey color if the spell is not learned or surpressed.
+                        // Show Grey color if the spell is not learned.
                         IsSpellNotLearned ?
                         SharpDX.Color.Gray :
                         
                         // Blue color if the target has not enough mana to use the spell.
-                        IsSpellNoMana ?
+                        GetSpell.ManaCost > PlayingCharacter.Mana ?
                         SharpDX.Color.Cyan :
 
                         // Red color if the Spell CD is <= 4 (almost up),
@@ -181,7 +179,7 @@ namespace NabbTracker
                     
                     var GetSummonerSpell = PlayingCharacter.Spellbook.GetSpell(SummonerSpellSlots[SummonerSpell]);
                     var GetSummonerSpellCD = GetSummonerSpell.CooldownExpires - Game.Time;
-                    var SummonerSpellCDString = string.Format("{0:0}", GetSummonerSpellCD);
+					var SummonerSpellCDString = string.Format("{0:0}", GetSummonerSpellCD);
                     
                     switch (GetSummonerSpell.Name.ToLower())
                     {
@@ -236,7 +234,7 @@ namespace NabbTracker
                         default:
                             GetSummonerSpellName = "Smite";
                             break
-                        ;
+						;
                     }
                     
                     DisplayTextFont.DrawText(
