@@ -54,6 +54,9 @@ namespace NabbCleanser
             Game.OnUpdate += Game_OnGameUpdate;
         }
         
+		/// <summary>
+        ///		Declares whenever the target unit has no protection.
+        /// </summary>
         bool HasNoProtection()
         {
             // return "true" if the Player..
@@ -67,6 +70,9 @@ namespace NabbCleanser
             ; 
         }
         
+		/// <summary>
+        ///		Called when the player needs to use cleanse.
+        /// </summary>
         bool ShouldUseCleanse()
         {
             // return "true" if the Player is being affected by..
@@ -104,6 +110,9 @@ namespace NabbCleanser
             ; 
         }
 
+		/// <summary>
+        ///		Called when the player needs to use a cleanser Item.
+        /// </summary>
         bool ShouldUseCleanser()
         {
             // return "true" if the Player is being affected by..
@@ -135,6 +144,9 @@ namespace NabbCleanser
             ; 
         }
         
+		/// <summary>
+        ///		Called when the player needs to use Mikaels Crucible.
+        /// </summary>
         bool ShouldUseMikaels(Obj_AI_Hero target)
         {
             // return "true" if the Player is being affected by..
@@ -190,6 +202,9 @@ namespace NabbCleanser
             ; 
         }
         
+		/// <summary>
+        ///		Called when the player needs to cleanse enemy ignite.
+        /// </summary>
         bool CanAndShouldCleanseIfIgnited()
         {
             // return "true" if..
@@ -205,6 +220,12 @@ namespace NabbCleanser
             ;
         }
         
+		/// <summary>
+        ///		Builds the Mikaels Menu.
+        /// </summary>
+		/// <param name="Menu">
+        ///     The Menu
+        /// </param>
         public void BuildMikaelsMenu(Menu Menu)
         {            
             var MikaelsMenu = new Menu("Mikaels Options", "use.mikaelsmenu");
@@ -221,7 +242,10 @@ namespace NabbCleanser
 
             Menu.AddSubMenu(MikaelsMenu);
         }
-        
+		
+        /// <summary>
+        ///		Called when the player uses a cleanser.
+        /// </summary>
         private void UseCleanser()
         {
             // if the player has QuickSilver Sash and is able to use it..
@@ -257,14 +281,21 @@ namespace NabbCleanser
         private void Game_OnGameUpdate(EventArgs args)
         {
             // Don't use the assembly if the player is dead.
-            if (ObjectManager.Player.IsDead) return;
-            
+            if (ObjectManager.Player.IsDead)
+			{	
+				return;
+			}
+			
             // Don't use the assembly if the relative option is not enabled.
-            if (!Menu.Item("enable").GetValue<bool>()) return;
-            
+            if (!Menu.Item("enable").GetValue<bool>())
+			{
+				return;
+            }
+			
             // If the only-cleanse-if-key-pressed option is enabled and the relative key is being pressed or the only-cleanse-if-key-pressed option is disabled..
-            if ((Menu.Item("panic_key_enable").GetValue<bool>() && Menu.Item("use.panic_key").GetValue<KeyBind>().Active) || (!Menu.Item("panic_key_enable").GetValue<bool>())){
-                
+            if ((Menu.Item("panic_key_enable").GetValue<bool>() && Menu.Item("use.panic_key").GetValue<KeyBind>().Active) 
+				|| (!Menu.Item("panic_key_enable").GetValue<bool>()))
+			{
                 cleanse = ObjectManager.Player.GetSpellSlot("summonerboost");
                 var IsCleanseReady = ObjectManager.Player.Spellbook.CanUseSpell(cleanse) == SpellState.Ready;
 
@@ -272,8 +303,8 @@ namespace NabbCleanser
                 foreach (var ally in ObjectManager.Get<Obj_AI_Hero>()
                     .Where(h => h.IsAlly
                         && Menu.Item(string.Format("use.mikaels.{0}", h.ChampionName.ToLowerInvariant())).GetValue<bool>()
-                        && ObjectManager.Player.CountAlliesInRange(500) > 0)
-                    ){
+                        && ObjectManager.Player.CountAlliesInRange(500) > 0))
+				{
 
                     // if the player has Mikaels and is able to use it..
                     if (Items.HasItem(Mikaels) && Items.CanUseItem(Mikaels))

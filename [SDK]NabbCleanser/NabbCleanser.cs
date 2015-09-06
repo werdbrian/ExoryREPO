@@ -87,7 +87,6 @@ namespace NabbCleanser
             Menu.Add(new MenuBool("use.cleansers.second.priority", "Use Cleansers for second-priority ultimates", false));
             Menu.Add(new MenuSlider("use.delay", "Delay cleanse/cleansers usage by X ms.", 500, 0, 2000));
             //
-            
             this.Menu.Attach();
         }
         
@@ -312,12 +311,21 @@ namespace NabbCleanser
         /// <summary>
         ///     Called when the game updates itself.
         /// </summary>
-        /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
+        /// <param name="args">
+		///		The <see cref="EventArgs" />
+		/// </param>
         private void OnUpdate(EventArgs args)
         {
+			// Don't use the assembly if the player is dead.
+            if (ObjectManager.Player.IsDead)
+			{	
+				return;
+			}
+			
             // If the only-cleanse-if-key-pressed option is enabled and the relative key is being pressed or the only-cleanse-if-key-pressed option is disabled..
-            if ((this.Menu["panic_key_enable"].GetValue<MenuBool>().Value && this.Menu["use.panic_key"].GetValue<MenuKeyBind>().Active) || (!this.Menu["panic_key_enable"].GetValue<MenuBool>().Value)){
-            
+            if ((this.Menu["panic_key_enable"].GetValue<MenuBool>().Value && this.Menu["use.panic_key"].GetValue<MenuKeyBind>().Active) 
+				|| (!this.Menu["panic_key_enable"].GetValue<MenuBool>().Value))
+			{
                 cleanse = this.Player.GetSpellSlot("summonerboost");
                 var CleanseDelay = this.Menu["use.delay"].GetValue<MenuSlider>().Value;
                 var IsCleanseReady = this.Player.Spellbook.CanUseSpell(cleanse) == SpellState.Ready;
@@ -326,8 +334,8 @@ namespace NabbCleanser
                 foreach (var ally in ObjectManager.Get<Obj_AI_Hero>()
                     .Where(h => h.IsAlly
                         && this.Menu[string.Format("use.mikaels.{0}", h.ChampionName.ToLowerInvariant())].GetValue<MenuBool>().Value
-                        /*&& this.Player.CountAlliesInRange(500) > 0*/)
-                    ){
+                        /*&& this.Player.CountAlliesInRange(500) > 0*/))
+				{
 
                     // if the player has Mikaels and is able to use it..
                     if (Items.HasItem(Mikaels) && Items.CanUseItem(Mikaels))
