@@ -157,23 +157,21 @@ namespace NabbTracker
         /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
         private void OnDraw(EventArgs args)
         {
-            foreach (var TrackedChar in GameObjects.EnemyHeroes.Where(TrackedChar => (TrackedChar.IsValid)
-                && (!TrackedChar.IsMe)
-                && (TrackedChar.IsHPBarRendered)
-                && ((TrackedChar.IsEnemy && this.Menu["display.enemies"].GetValue<MenuBool>().Value) 
-                    || (TrackedChar.IsAlly && this.Menu["display.allies"].GetValue<MenuBool>().Value)))
-                ){
-                
+            foreach (var TrackedChar in ObjectManager.Get<Obj_AI_Hero>()
+				.Where(pg => pg.IsValid
+                && !pg.IsMe
+                && pg.IsHPBarRendered
+                && (pg.IsEnemy && this.Menu["display.enemies"].GetValue<MenuBool>().Value 
+                    || pg.IsAlly && this.Menu["display.allies"].GetValue<MenuBool>().Value)))
+			{
                 for (int Spell = 0; Spell < SpellSlots.Count(); Spell++){
                     X = (int)TrackedChar.HPBarPosition.X + 10 + (Spell * 25);
                     Y = (int)TrackedChar.HPBarPosition.Y + 35;
     
                     var GetSpell = TrackedChar.Spellbook.GetSpell(SpellSlots[Spell]);
-                    var GetSpellCD = GetSpell.CooldownExpires - Game.Time;
-                    var SpellCDString = string.Format("{0:0}", GetSpellCD);
-                    
+					var GetSpellCD = GetSpell.CooldownExpires - Game.Time;                   
+				    var SpellCDString = string.Format("{0:0}", GetSpellCD);
                     var IsSpellNotLearned = TrackedChar.Spellbook.CanUseSpell(SpellSlots[Spell]) == SpellState.NotLearned;
-                    var IsSpellNoMana = TrackedChar.Spellbook.CanUseSpell(SpellSlots[Spell]) == SpellState.NoMana;
                     
                     DisplayTextFont.DrawText(
                         null,
@@ -188,7 +186,7 @@ namespace NabbTracker
                         SharpDX.Color.Gray :
                         
                         // Blue color if the target has not enough mana to use the spell.
-                        IsSpellNoMana ?
+                        GetSpell.ManaCost > TrackedChar.Mana ?
                         SharpDX.Color.Cyan :
 
                         // Red color if the Spell CD is <= 4 (almost up),
@@ -200,8 +198,8 @@ namespace NabbTracker
                         SharpDX.Color.Yellow : SharpDX.Color.LightGreen
                     );
                     
-                    if (this.Menu["display.spell_levels"].GetValue<MenuBool>().Value){
-                    
+                    if (this.Menu["display.spell_levels"].GetValue<MenuBool>().Value)
+					{
                         for (int DrawSpellLevel = 0; DrawSpellLevel <= GetSpell.Level - 1; DrawSpellLevel++){
                             SpellLevelX = X + (DrawSpellLevel * 3) - 4;
                             SpellLevelY = Y;
@@ -224,7 +222,7 @@ namespace NabbTracker
                     
                     var GetSummonerSpell = TrackedChar.Spellbook.GetSpell(SummonerSpellSlots[SummonerSpell]);
                     var GetSummonerSpellCD = GetSummonerSpell.CooldownExpires - Game.Time;
-                    var SummonerSpellCDString = string.Format("{0:0}", GetSummonerSpellCD);
+					var SummonerSpellCDString = string.Format("{0:0}", GetSummonerSpell.Cooldown);
                     
                     switch (GetSummonerSpell.Name.ToLower())
                     {
