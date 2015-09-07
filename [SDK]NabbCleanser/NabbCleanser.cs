@@ -131,9 +131,6 @@ namespace NabbCleanser
              // ..or Stuns..
              || this.Player.HasBuffOfType(BuffType.Stun)
              
-             // ..or Suppressions..
-             || this.Player.HasBuffOfType(BuffType.Suppression)
-             
              // ..or Taunts..
              || this.Player.HasBuffOfType(BuffType.Taunt)
              
@@ -154,7 +151,7 @@ namespace NabbCleanser
             // return "true" if the Player is being affected by..
             return (
                 // ..Zed's Target Mark (R)..
-                this.Player.HasBuff("zedulttargetmark")
+                this.Player.HasBuff("ZedR")
 
              // ..or Vladimir's Mark (R)..
              || this.Player.HasBuff("VladimirHemoplague")
@@ -170,6 +167,9 @@ namespace NabbCleanser
              
              // ..or Malzahar's Ultimate..
              || this.Player.HasBuff("AlZaharNetherGrasp")
+			 
+			 // ..or Suppressions..
+             || this.Player.HasBuffOfType(BuffType.Suppression)
             )
              //..and, if he has no protection..
              && HasNoProtection()
@@ -265,7 +265,7 @@ namespace NabbCleanser
              || target.HasBuff("summonerexhaust")
              
              // ..or Zed's Target Mark (R)..
-             || target.HasBuff("zedulttargetmark")
+             || target.HasBuff("ZedR")
 
              // ..or Vladimir's Mark (R)..
              || target.HasBuff("VladimirHemoplague")
@@ -355,16 +355,6 @@ namespace NabbCleanser
                     // If the player actually has the summonerspell Cleanse and it is ready to use..
                     if (cleanse != SpellSlot.Unknown && IsCleanseReady)
                     {
-                        var HasSkarnerUltimate = this.Player.HasBuff("SkarnerR");
-                        
-                        // If the player is being affected by Skarner's R..
-                        if (HasSkarnerUltimate)
-                        {
-                            // ..Use the normal delay.
-                            DelayAction.Add(CleanseDelay, () => this.Player.Spellbook.CastSpell(cleanse, this.Player));
-                            return;
-                        }
-                    
                         // ..JUST (DO)CLEANSE IT!
                         this.Player.Spellbook.CastSpell(cleanse, this.Player);
                     }    
@@ -373,15 +363,24 @@ namespace NabbCleanser
                 // If the player is being affected by Hard CC or a Second-priority ult mark..
                 if (ShouldUseCleanser() || ShouldUseSecondPriorityCleanser())
                 {
-                    var HasZedTargetMark = this.Player.HasBuff("zedulttargetmark");
-
+                    var HasZedTargetMark = this.Player.HasBuff("ZedR");
+                    var HasSkarnerUltimate = this.Player.HasBuff("SkarnerR");
+                        
                     // If the player is being affected by the DeathMark..
                     if (HasZedTargetMark)
                     {
                         // ..Double the delay before cleansing..
-                        DelayAction.Add(CleanseDelay*2, () => UseCleanser());
+                        DelayAction.Add(CleanseDelay+1000, () => UseCleanser());
                         return;
                     }
+					
+					// If the player is being affected by Skarner's R..
+					if (HasSkarnerUltimate)
+					{
+						// ..Use the normal delay.
+						DelayAction.Add(CleanseDelay+250, () => UseCleanser());
+						return;
+					}
                 }
 
                 // if the player has Mikaels and is able to use it..
