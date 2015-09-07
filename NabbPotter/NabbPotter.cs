@@ -87,8 +87,8 @@
                 else
                     
                     // ..use the biscuit.
-                    Items.UseItem(Biscuit)
-                ;
+                    Items.UseItem(Biscuit);
+                
             }
             
             // If Mana is lower than the config value..
@@ -96,6 +96,7 @@
             {
                 // ..use the Mana Potion.
                 Items.UseItem(ManaPot);
+                Items.UseItem(Biscuit);
             }
             
             // If both Health and Mana are lower than the config value..
