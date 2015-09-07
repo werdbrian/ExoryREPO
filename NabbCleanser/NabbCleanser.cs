@@ -94,7 +94,9 @@ namespace NabbCleanser
              
              // ..or Taunts..
              || ObjectManager.Player.HasBuffOfType(BuffType.Taunt)
-             
+             || ObjectManager.Player.HasBuffOfType(BuffType.Suppression)
+             || ObjectManager.Player.HasBuffOfType(BuffType.Knockup)
+             || ObjectManager.Player.HasBuffOfType(BuffType.Knockback)
              // ..or Exhaust..
              || ObjectManager.Player.HasBuff("summonerexhaust")
              )
